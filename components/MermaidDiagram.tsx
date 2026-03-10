@@ -32,6 +32,9 @@ export function MermaidDiagram({ chart, caption }: MermaidDiagramProps) {
           securityLevel: 'loose',
         })
 
+        // Validate syntax before rendering to prevent error SVG injection
+        await mermaid.parse(chart)
+
         const { svg: renderedSvg } = await mermaid.render(idRef.current, chart)
         if (!cancelled) {
           setSvg(renderedSvg)
@@ -41,6 +44,20 @@ export function MermaidDiagram({ chart, caption }: MermaidDiagramProps) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : '다이어그램 렌더링 오류')
           setIsLoading(false)
+        }
+      } finally {
+        // Clean up any error SVGs Mermaid may have injected into the body
+        if (typeof document !== 'undefined') {
+          const errorElements = document.querySelectorAll(`#d${idRef.current}, [id^="d${idRef.current}"]`)
+          errorElements.forEach(el => el.remove())
+          // Also clean up orphaned mermaid error containers
+          document.querySelectorAll('svg[id*="mermaid"] + style').forEach(el => {
+            const prev = el.previousElementSibling
+            if (prev && prev.getAttribute('aria-roledescription') === 'error') {
+              prev.remove()
+              el.remove()
+            }
+          })
         }
       }
     }

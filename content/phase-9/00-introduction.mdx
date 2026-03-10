@@ -143,18 +143,18 @@ Palantir의 온톨로지는 전통적 데이터(구조화·비정형·스트리�
 Phase 2부터 Phase 8까지 배운 학문적 온톨로지(OWL/RDF)와 Palantir 온톨로지를 비교해보자.
 
 <MermaidDiagram chart={`quadrantChart
-    title 온톨로지 기술 비교 - 표현력 vs 운영 실용성
-    x-axis 낮은 운영 실용성 --> 높은 운영 실용성
-    y-axis 낮은 표현력 --> 높은 표현력
-    quadrant-1 높은 표현력, 높은 실용성
-    quadrant-2 높은 표현력, 낮은 실용성
-    quadrant-3 낮은 표현력, 낮은 실용성
-    quadrant-4 낮은 표현력, 높은 실용성
+    title Expressiveness vs Operational Practicality
+    x-axis Low Practicality --> High Practicality
+    y-axis Low Expressiveness --> High Expressiveness
+    quadrant-1 High Both
+    quadrant-2 High Expr Low Pract
+    quadrant-3 Low Both
+    quadrant-4 Low Expr High Pract
     OWL Full: [0.15, 0.95]
     OWL DL: [0.30, 0.85]
     OWL Lite: [0.45, 0.65]
     Palantir Ontology: [0.85, 0.45]
-    SKOS: [0.60, 0.30]`} caption="온톨로지 기술 스펙트럼 — 표현력과 운영 실용성의 트레이드오프" />
+    SKOS: [0.60, 0.30]`} caption="온톨로지 기술 스펙트럼 - 표현력과 운영 실용성의 트레이드오프" />
 
 이 그래프가 보여주는 핵심 통찰은 **의도적 트레이드오프**다. Palantir는 논리적 완전성을 포기하는 대신 운영 현장 채택 가능성을 극대화했다. 이것은 결함이 아니라 설계 선택이다.
 
