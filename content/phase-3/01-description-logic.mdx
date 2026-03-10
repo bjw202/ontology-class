@@ -111,14 +111,14 @@ ALC(Attributive Language with Complement)는 DL의 가장 기본적인 표현 �
 DL 온톨로지는 두 가지 부분으로 구성됩니다:
 
 **TBox (Terminological Box): 개념 정의**
-```
+```text
 Human ⊑ Animal                    (인간은 동물이다)
 Bachelor ≡ Man ⊓ ¬Married         (독신자 = 결혼하지 않은 남성)
 Parent ≡ ∃hasChild.⊤              (부모 = 자식이 있는 것)
 ```
 
 **ABox (Assertional Box): 개체에 대한 사실**
-```
+```text
 Human(:Socrates)                   (소크라테스는 인간이다)
 hasTeacher(:Plato, :Socrates)      (플라톤의 선생님은 소크라테스이다)
 ¬married(:Socrates)                (소크라테스는 결혼하지 않았다)
@@ -232,7 +232,7 @@ OWL 2 DL은 SROIQ(D) 언어를 기반으로 합니다. 각 글자의 의미:
 다음 온톨로지로 추론 과정을 따라가 보겠습니다:
 
 **입력 온톨로지:**
-```
+```text
 TBox:
 1. GraduateStudent ⊑ Student
 2. Student ⊑ Person
@@ -253,25 +253,25 @@ ABox:
 가장 중요한 단계입니다. Tableau 알고리즘은 DL 일관성 검사의 핵심 기법입니다:
 
 1. **초기 모델 생성:** ABox의 모든 명제를 포함하는 초기 모델 만들기
-   - 모델 M = { GraduateStudent(김철수) }
+   - 모델 M = { `GraduateStudent(김철수)` }
 
 2. **추이적 폐쇄(Transitive Closure) 적용:** subClassOf 관계를 따라 모든 상위 클래스 추론
-   - GraduateStudent(김철수) + GraduateStudent ⊑ Student
-   - → Student(김철수) 추가
-   - Student(김철수) + Student ⊑ Person
-   - → Person(김철수) 추가
-   - Person(김철수) + Person ⊑ Animal
-   - → Animal(김철수) 추가
+   - `GraduateStudent(김철수)` + `GraduateStudent ⊑ Student`
+   - → `Student(김철수)` 추가
+   - `Student(김철수)` + `Student ⊑ Person`
+   - → `Person(김철수)` 추가
+   - `Person(김철수)` + `Person ⊑ Animal`
+   - → `Animal(김철수)` 추가
 
 3. **제약 조건 확인:** 모순이 있는지 검사
-   - Student(김철수)와 Professor(김철수)가 동시에 있으면 모순
+   - `Student(김철수)`와 `Professor(김철수)`가 동시에 있으면 모순
    - 현재는 Student만 있으므로 정상
 
 4. ** clashes 감지:** 충돌이 없는지 확인
    - 예: `Person ⊓ ¬Person` 같은 표현식이 있으면 즉시 모순
 
 **단계 3: 최종 모델 생성**
-```
+```text
 도출된 새로운 사실:
 - Student(김철수)
 - Person(김철수)
@@ -279,21 +279,25 @@ ABox:
 - (김철수는 Professor가 아님 - disjoint로부터)
 ```
 
-### 최적화 기법: Lazy Completion추론기는 모든 가능한 추론을 즉시 수행하지 않습니다. 필요한 것만 계산하는 **지연 평가(Lazy Evaluation)** 전략을 사용합니다:
+### 최적화 기법: Lazy Completion
 
-```
+추론기는 모든 가능한 추론을 즉시 수행하지 않습니다. 필요한 것만 계산하는 **지연 평가(Lazy Evaluation)** 전략을 사용합니다:
+
+```text
 사용자 질의: "김철수는 Animal인가?"
 
 추론기 동작:
-1. Animal(김철수)가 이미 계산되었는지 확인 (캐시 확인)
-2. 없으면 → Person(김철수) 확인 → Student(김철수) 확인
-3. GraduateStudent(김철수)에서 시작하여 추이적 폐쇄 실행
-4. 결과: Animal(김철수) → 참 반환
+1. `Animal(김철수)`가 이미 계산되었는지 확인 (캐시 확인)
+2. 없으면 → `Person(김철수)` 확인 → `Student(김철수)` 확인
+3. `GraduateStudent(김철수)`에서 시작하여 추이적 폐쇄 실행
+4. 결과: `Animal(김철수)` → 참 반환
 ```
 
 이 전략은 대규모 온톨로지에서 필수적입니다. SNOMED CT(35만 개 클래스) 전체를 매번 분류하면 너무 느리기 때문입니다.
 
-### 추론 복잡도와 실제 성능이론적 복잡도와 실제 성능은 크게 다를 수 있습니다:
+### 추론 복잡도와 실제 성능
+
+이론적 복잡도와 실제 성능은 크게 다를 수 있습니다:
 
 | DL 언어 | 이론적 복잡도 | 실제 성능 (최적화 적용 시) |
 |---------|--------------|-------------------------|

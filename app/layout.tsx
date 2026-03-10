@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="ko" dir="ltr" suppressHydrationWarning>
       <Head />
-      <body>
+      <body suppressHydrationWarning>
         <Layout
           navbar={navbar}
           pageMap={await getPageMap()}
