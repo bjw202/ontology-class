@@ -1,0 +1,309 @@
+---
+title: 종합 실습
+description: 2단계에서 배운 클래스, 인스턴스, 속성, 공리, 계층 구조 개념을 통합하는 종합 실습 문제입니다
+difficulty: beginner
+---
+
+# 2단계 종합 실습
+
+이번 실습은 2단계에서 배운 모든 개념을 통합합니다. 문제를 순서대로 풀면서 온톨로지를 점진적으로 구축해 나가세요.
+
+> **실습 원칙:** 완벽한 답이 하나만 있는 것은 아닙니다. 온톨로지 설계는 창의적인 작업입니다. 자신의 선택에 대한 이유를 함께 기록해 보세요.
+
+---
+
+## 실습 1: 학교 도메인 - 클래스와 인스턴스 식별 (기본)
+
+### 문제
+
+다음 시나리오를 읽고 클래스와 인스턴스를 각각 5개 이상 식별하세요.
+
+> **시나리오:** 한국대학교에는 컴퓨터공학과와 수학과가 있습니다. 컴퓨터공학과의 김철수 교수는 "알고리즘" 강의를 가르칩니다. 학부생 이영희는 컴퓨터공학과에 재학 중이며 알고리즘 강의를 수강하고 있습니다. 대학원생 박민준은 김철수 교수의 지도 학생으로, 인공지능 연구실에서 연구하고 있습니다. 도서관에는 "알고리즘 입문"이라는 책이 있으며, 이영희가 현재 대출 중입니다.
+
+### 작성 양식
+
+**클래스 (최소 5개):**
+
+| 클래스 이름 | 설명 | OWL 선언 |
+|------------|------|-----------|
+| (예시) University | 대학교 | `:University rdf:type owl:Class .` |
+| 1. | | |
+| 2. | | |
+| 3. | | |
+| 4. | | |
+| 5. | | |
+
+**인스턴스 (최소 5개):**
+
+| 인스턴스 이름 | 소속 클래스 | OWL 선언 |
+|--------------|------------|-----------|
+| (예시) 한국대학교 | University | `:한국대학교 rdf:type :University .` |
+| 1. | | |
+| 2. | | |
+| 3. | | |
+| 4. | | |
+| 5. | | |
+
+### 힌트
+
+- 여러 종류의 사람(교수, 학생)도 클래스가 됩니다
+- 장소, 활동, 사물 모두 클래스가 될 수 있습니다
+- "한국대학교"처럼 고유한 이름을 가진 것은 인스턴스입니다
+
+---
+
+## 실습 2: 학교 도메인 - 속성 정의 (기본)
+
+### 문제
+
+실습 1에서 정의한 클래스들 사이의 관계와 데이터 속성을 정의하세요.
+
+**요구사항:**
+- 객체 속성(Object Property) 최소 3개: 클래스 인스턴스 사이의 관계
+- 데이터 속성(Data Property) 최소 3개: 클래스 인스턴스와 리터럴 값의 관계
+- 각 속성의 도메인(Domain)과 범위(Range)를 정의하세요
+
+### 작성 양식
+
+**객체 속성 (최소 3개):**
+
+```turtle
+# 예시:
+:teachesAt  rdf:type    owl:ObjectProperty ;
+            rdfs:label  "교수하는 곳" ;
+            rdfs:domain :Professor ;
+            rdfs:range  :University .
+
+# 여기에 작성:
+:___  rdf:type    owl:ObjectProperty ;
+      rdfs:domain :___ ;
+      rdfs:range  :___ .
+```
+
+**데이터 속성 (최소 3개):**
+
+```turtle
+# 예시:
+:hasStudentID  rdf:type    owl:DatatypeProperty ;
+               rdfs:label  "학번" ;
+               rdfs:domain :Student ;
+               rdfs:range  xsd:string .
+
+# 여기에 작성:
+:___  rdf:type    owl:DatatypeProperty ;
+      rdfs:domain :___ ;
+      rdfs:range  xsd:___ .
+```
+
+**사용 예시 (ABox):**
+
+실습 1의 인스턴스에 정의한 속성을 적용하세요:
+
+```turtle
+:이영희  :enrolledAt  :컴퓨터공학과 .
+:이영희  :hasStudentID  "20231234" .
+# 여기에 추가:
+```
+
+---
+
+## 실습 3: 가족 관계 온톨로지 설계 (도전)
+
+### 문제
+
+다음 가족 관계를 표현하는 온톨로지를 설계하세요.
+
+> **시나리오:** 홍판서와 그의 부인 춘섬은 홍길동, 홍길순 두 남매의 부모입니다. 홍길동은 허부인과 결혼했으며, 홍길동과 허부인 사이에는 홍철수가 있습니다. 따라서 홍판서와 춘섬은 홍철수의 조부모입니다.
+
+### 요구사항
+
+**1단계: 클래스 설계**
+- 필요한 클래스들을 정의하세요
+
+**2단계: 속성 설계**
+다음 관계를 포함하는 속성들을 정의하세요:
+- 부모-자녀 관계 (역관계 포함)
+- 형제/자매 관계 (대칭 속성)
+- 조부모-손자녀 관계 (추이성 또는 속성 연쇄)
+- 배우자 관계 (대칭 속성)
+- 이름, 나이 등 데이터 속성
+
+**3단계: 공리 설계**
+```turtle
+# 예시 공리:
+:Parent  rdfs:subClassOf  :Person .
+:hasChild  owl:inverseOf  :hasParent .
+:isSiblingOf  rdf:type  owl:SymmetricProperty .
+```
+
+**4단계: ABox 작성**
+시나리오의 모든 인물과 관계를 Turtle로 표현하세요.
+
+**5단계: 추론 확인**
+작성한 온톨로지에서 자동으로 추론 가능한 사실을 3가지 이상 작성하세요.
+
+### 참고 템플릿
+
+```turtle
+@prefix : <http://example.org/family#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# 클래스 선언
+:Person  rdf:type  owl:Class .
+# ...
+
+# 속성 선언
+:hasParent  rdf:type    owl:ObjectProperty ;
+            rdfs:domain :Person ;
+            rdfs:range  :Person .
+# ...
+
+# 인스턴스
+:홍판서  rdf:type  :Person ;
+         :hasName  "홍판서" .
+# ...
+
+# 관계
+:홍길동  :hasParent  :홍판서 .
+# ...
+```
+
+---
+
+## 실습 4: 계층 구조 공리 작성 (도전)
+
+### 문제
+
+"포유류 → 개 → 리트리버" 계층 구조를 완전한 OWL 온톨로지로 표현하세요.
+
+### 요구사항
+
+**1단계: 계층 정의**
+
+다음 계층을 `rdfs:subClassOf`로 표현하세요:
+
+```
+생물 (LivingBeing)
+  └── 동물 (Animal)
+        └── 포유류 (Mammal)
+              └── 개 (Dog)
+                    ├── 리트리버 (Retriever)
+                    │     ├── 골든리트리버 (GoldenRetriever)
+                    │     └── 래브라도리트리버 (LabradorRetriever)
+                    └── 푸들 (Poodle)
+```
+
+**2단계: 분리 공리**
+
+다음 분리 관계를 공리로 표현하세요:
+- 골든리트리버와 래브라도리트리버는 서로 다른 종이다
+- 리트리버와 푸들은 서로 다른 종이다
+
+**3단계: 속성 상속 확인**
+
+`Animal`에 다음 속성이 정의되어 있다고 가정할 때, `GoldenRetriever`의 인스턴스가 사용할 수 있는 모든 속성을 나열하세요:
+
+```turtle
+:Animal  :hasName        (데이터 속성) .
+:Mammal  :hasFurColor    (데이터 속성) .
+:Dog     :hasBreed       (데이터 속성) .
+:Dog     :hasOwner       (객체 속성, range: Person) .
+:Retriever  :isGoodForFetching  (데이터 속성, range: xsd:boolean) .
+```
+
+**4단계: 인스턴스 추가**
+
+다음 인스턴스를 온톨로지에 추가하고, 추론 엔진이 자동으로 알 수 있는 사실들을 모두 나열하세요:
+
+```turtle
+:버디  rdf:type  :GoldenRetriever ;
+       :hasName  "버디" ;
+       :hasFurColor  "황금색" .
+```
+
+---
+
+## 실습 5: 종합 도전 - 대학 도메인 온톨로지 완성하기
+
+### 문제
+
+실습 1-2에서 시작한 학교 도메인 온톨로지를 완성하세요. 이번에는 다음을 모두 포함해야 합니다:
+
+**포함해야 할 요소:**
+- 클래스 계층 (최소 8개 클래스, 3단계 이상 계층)
+- 분리 공리 (최소 2개)
+- 동치클래스 (최소 1개, 예: 영어/한국어 용어 통합)
+- 속성 최소 6개 (객체 3 + 데이터 3), 도메인/범위 포함
+- ABox: 시나리오의 모든 개체와 관계
+- 추론 가능한 사실 5개 이상 예측
+
+**최종 제출 형태:**
+
+```turtle
+@prefix univ: <http://example.org/university#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ==== TBox: 클래스 계층 ====
+univ:Person          rdf:type  owl:Class .
+# ... 나머지 클래스들
+
+# ==== TBox: 분리 공리 ====
+# ...
+
+# ==== TBox: 속성 ====
+# ...
+
+# ==== ABox: 인스턴스 ====
+# ...
+
+# ==== ABox: 관계 ====
+# ...
+```
+
+**자기 평가 체크리스트:**
+- [ ] 모든 클래스에 명확한 의미가 있는가?
+- [ ] IS-A vs PART-OF를 혼동하지 않았는가?
+- [ ] 도메인/범위 제약이 올바른가?
+- [ ] 분리 공리가 필요한 곳에 적용됐는가?
+- [ ] ABox가 시나리오의 모든 개체를 포함하는가?
+
+---
+
+## 성찰 질문
+
+실습을 마친 후 다음 질문에 대해 생각해 보세요:
+
+1. **클래스 설계에서 가장 어려웠던 점은 무엇인가요?** 어떤 것을 클래스로, 어떤 것을 인스턴스로 결정하는 데 어려움이 있었나요?
+
+2. **속성의 도메인/범위를 정의할 때 고민했던 것은 무엇인가요?** 너무 좁게 정의하면 재사용이 어렵고, 너무 넓게 정의하면 의미가 약해집니다.
+
+3. **개방 세계 가정이 실습에서 어떤 영향을 미쳤나요?** 데이터베이스 설계와 다르게 생각해야 했던 부분이 있었나요?
+
+4. **이 온톨로지를 실제 시스템에 적용한다면 무엇을 추가하거나 변경하겠나요?**
+
+---
+
+## 모범 답안 힌트
+
+실습 1의 클래스 예시:
+- `University`, `Department`, `Person`, `Faculty`, `Student`, `UndergraduateStudent`, `GraduateStudent`, `Course`, `Library`, `Book`
+
+실습 3의 핵심 속성 특성:
+- `hasParent` → 함수적 속성 아님 (부모가 2명), 역: `hasChild`
+- `isSiblingOf` → 대칭적 속성
+- `isAncestorOf` → 추이적 속성
+- `isMarriedTo` → 대칭적 속성, 역함수적 속성
+
+실습 4의 추론 결과 (버디에 대해):
+- `버디 rdf:type Retriever` (subClassOf 추이성)
+- `버디 rdf:type Dog` (subClassOf 추이성)
+- `버디 rdf:type Mammal` (subClassOf 추이성)
+- `버디 rdf:type Animal` (subClassOf 추이성)
+- `버디 rdf:type LivingBeing` (subClassOf 추이성)
+- `버디 isGoodForFetching true` (Retriever 클래스의 특성, 공리에 따라)

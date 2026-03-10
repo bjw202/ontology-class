@@ -1,0 +1,27 @@
+{
+  "name": "ontology-class",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.0.0",
+    "nextra": "^4.0.0",
+    "nextra-theme-docs": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "mermaid": "^11.12.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  }
+}

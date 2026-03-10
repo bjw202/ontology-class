@@ -1,0 +1,538 @@
+---
+title: 도구 설정 가이드
+description: 온톨로지 학습에 필요한 핵심 도구(Protege, RDFLib, Fuseki) 설치 및 설정
+difficulty: beginner
+---
+
+# 도구 설정 가이드
+
+> **버전 정보 (2025년 1월 기준)**
+> - Protege: 5.6.x
+> - HermiT 추론기: 1.4.x (Protege 내장)
+> - Python: 3.11+
+> - RDFLib: 7.x
+> - Apache Jena Fuseki: 4.x
+> - Java: 17+ (Protege 및 Fuseki 실행용)
+
+이 가이드는 온톨로지 학습에 필요한 세 가지 핵심 도구를 단계별로 설치하고 설정하는 방법을 안내합니다. 각 섹션은 약 15분 내에 완료할 수 있도록 구성되어 있습니다.
+
+## 이 가이드 활용법
+
+### 학습 Phase별 필요 도구
+
+| Phase | 필요 도구 | 우선순위 |
+|-------|---------|----------|
+| **Phase 1: 온톨로지 기초** | Protege + HermiT | 필수 |
+| **Phase 2: OWL 구조** | Protege + HermiT | 필수 |
+| **Phase 3: 추론과 일관성** | Protege + HermiT, RDFLib | 권장 |
+| **Phase 4: 실전 온톨로지** | Protege, RDFLib, Fuseki | 권장 |
+| **Phase 5: SPARQL** | Protege, Fuseki | 필수 |
+| **Phase 6: 온톨로지 설계** | 전체 도구 | 선택 |
+
+**처음 시작하신다면**: 먼저 **Protege + HermiT**를 설치하세요. 나머지 도구는 해당 Phase 진행 전에 설치해도 충분합니다.
+
+---
+
+## 1. Protege + HermiT 추론기
+
+Protege는 온톨로지 모델링을 위한 가장 널리 사용되는 오픈소스 도구입니다. HermiT는 OWL 2 DL 추론기로 Protege에 내장되어 있습니다.
+
+### 1.1 설치
+
+#### **Windows**
+
+1. **Java 설치 확인**
+   ```cmd
+   java -version
+   ```
+   Java 17 이상이 필요합니다. 설치되어 있지 않다면:
+   - [Oracle JDK 다운로드](https://www.oracle.com/java/technologies/downloads/)
+   - 또는 [OpenJDK 다운로드](https://adoptium.net/) 추천
+
+2. **Protege 다운로드**
+   - [Protege 공식 웹사이트](https://protege.stanford.edu/) 접속
+   - Windows용 설치 파일(`Protege-5.6.x-win.exe`) 다운로드
+   - 버전 확인: 5.6.x 시리즈 (최신 안정 버전)
+
+3. **설치**
+   - 다운로드한 설치 파일 실행
+   - 설치 경로 선택 (기본값 권장: `C:\Program Files\Protege`)
+   - 바로가기 생성 옵션 선택
+
+#### **macOS**
+
+1. **Java 설치 확인**
+   ```bash
+   java -version
+   ```
+   Java 17 이상이 필요합니다. Homebrew를 사용한다면:
+   ```bash
+   brew install openjdk@17
+   ```
+   또는 [Adoptium OpenJDK](https://adoptium.net/) 다운로드
+
+2. **Protege 다운로드**
+   - [Protege 다운로드 페이지](https://protege.stanford.edu/software.php#downloads)
+   - macOS용 `.dmg` 파일(`Protege-5.6.x-macos.dmg`) 다운로드
+
+3. **설치**
+   - 다운로드한 `.dmg` 파일 더블클릭
+   - Protege를 Applications 폴더로 드래그
+
+#### **Linux (Ubuntu/Debian)**
+
+1. **Java 설치**
+   ```bash
+   # Java 17 설치
+   sudo apt update
+   sudo apt install openjdk-17-jdk
+   
+   # Java 버전 확인
+   java -version
+   ```
+
+2. **Protege 다운로드**
+   ```bash
+   # Protege 다운로드 (최신 5.6.x 버전 확인)
+   wget https://github.com/protegeproject/protege-distribution/releases/download/protege-5.6.4/Protege-5.6.4-linux.tar.gz
+   
+   # 압축 해제
+   tar -xzf Protege-5.6.4-linux.tar.gz
+   
+   # 이동
+   sudo mv Protege-5.6.4 /opt/protege
+   
+   # 실행 권한 부여
+   chmod +x /opt/protege/run.sh
+   ```
+
+3. **바로가기 생성 (선택)**
+   ```bash
+   # Desktop 바로가기 생성
+   cat > ~/Desktop/Protege.desktop << 'EOF'
+   [Desktop Entry]
+   Name=Protégé
+   Comment=Ontology Editor
+   Exec=/opt/protege/run.sh
+   Icon=/opt/protege/app/protege.png
+   Type=Application
+   Categories=Development;
+   EOF
+   chmod +x ~/Desktop/Protege.desktop
+   ```
+
+### 1.2 HermiT 추론기 활성화
+
+HermiT는 Protege 5.x부터 기본적으로 내장되어 있지만, 명시적으로 활성화해야 합니다.
+
+1. **Protege 실행**
+   - Windows: 시작 메뉴 → Protégé
+   - macOS: Applications → Protégé
+   - Linux: `/opt/protege/run.sh` 실행 또는 터미널에서 `./run.sh`
+
+2. **HermiT 확인 및 활성화**
+   - 메뉴: `File → Preferences` (Windows/Linux) 또는 `Protégé → Preferences` (macOS)
+   - `Reasoner` 탭 선택
+   - `Reasoner` 드롭다운에서 `HermiT` 선택 (기본값)
+   - `Apply` → `OK` 클릭
+
+3. **추론기 상태 확인**
+   - 상단 툴바에서 추론기 아이콘 확인 (햇 모양 아이콘)
+   - 클릭하여 `HermiT`가 선택되어 있는지 확인
+
+### 1.3 첫 온톨로지 열기
+
+1. **새 온톨로지 생성**
+   - `File → New` 클릭
+   - 온톨로지 IRI 입력 (예: `http://example.com/my-ontology`)
+   - 저장 위치 선택 (예: `my-ontology.owl`)
+
+2. **예제 온톨로지로 연습**
+   - `File → Open` 클릭
+   - Protege 설치 폴더의 `examples` 폴더에서 `pizza.owl` 열기
+   - `Entities` 탭에서 클래스 계층 구조 탐색
+
+3. **HermiT로 추론 실행**
+   - 상단 툴바의 `Start the reasoner` 버튼 클릭
+   - `Classify` 탭에서 추론 결과 확인
+
+### 1.4 문제 해결
+
+**문제: Java 버전 오류**
+```
+Error: Java version is incompatible
+```
+**해결**: Java 17 이상 설치 및 환경변수 설정 확인
+
+**문제: HermiT가 목록에 없음**
+**해결**:
+- `File → Preferences → Reasoner` 탭
+- `Reasoner` 드롭다운에서 `HermiT` 선택
+- 없다면 `Help → Check for Updates` 실행
+
+**문제: 메모리 부족 (Large Ontology)**
+**해결**:
+- Protege 설정 파일(`protege.l4j.ini`) 수정
+- `-Xmx` 값 증가 (예: `-Xmx8g` for 8GB)
+
+---
+
+## 2. Python + RDFLib
+
+RDFLib는 Python에서 RDF 데이터를 처리하는 표준 라이브러리입니다. SPARQL 쿼리와 OWL 추론을 연습하는 데 사용됩니다.
+
+### 2.1 환경 설정
+
+#### **Python 설치 확인**
+
+```bash
+# Python 버전 확인 (3.11 이상 필요)
+python --version
+# 또는
+python3 --version
+```
+
+**Python이 없다면**:
+- **Windows**: [python.org](https://www.python.org/downloads/)에서 3.11+ 다운로드 및 설치
+- **macOS**: Homebrew 사용 `brew install python@3.11`
+- **Linux**: `sudo apt install python3.11`
+
+#### **가상 환경 생성 (권장)**
+
+```bash
+# 프로젝트 폴더 생성
+mkdir ontology-python
+cd ontology-python
+
+# 가상 환경 생성
+python -m venv venv
+
+# 가상 환경 활성화
+# Windows (CMD):
+venv\Scripts\activate
+# Windows (PowerShell):
+venv\Scripts\Activate.ps1
+# macOS/Linux:
+source venv/bin/activate
+```
+
+**활성화 확인**: 터미널 프롬프트 앞에 `(venv)`가 표시되어야 합니다.
+
+#### **RDFLib 설치**
+
+```bash
+# RDFLib 최신 버전 설치
+pip install rdflib
+
+# 버전 확인
+python -c "import rdflib; print(rdflib.__version__)"
+# 출력: 7.x.x (7.x 시리즈 확인)
+```
+
+**추가 패키지 (Phase 4 이후)**:
+
+```bash
+# OWL 추론 (owlrl)
+pip install owlrl
+
+# SPARQL 업데이트 (SPARQL 1.1)
+# RDFLib 7.x는 기본 포함
+```
+
+### 2.2 첫 트리플 생성
+
+**파일: `first_triple.py`**
+
+```python
+from rdflib import Graph, Namespace, Literal, RDF, RDFS
+
+# 그래프 생성
+g = Graph()
+
+# 네임스페이스 정의
+EX = Namespace("http://example.org/")
+g.bind("ex", EX)
+
+# 트리플 추가: Subject (Type) Predicate (RDF.type) Object (Class)
+g.add((EX.Dog, RDF.type, EX.Animal))
+g.add((EX.Dog, RDFS.label, Literal("Dog")))
+g.add((EX.Dog, RDFS.comment, Literal("A domesticated carnivorous mammal")))
+
+# 터미널에 출력
+print("=== 트리플 목록 ===")
+for s, p, o in g:
+    print(f"{s.n3()} {p.n3()} {o.n3()}")
+
+# Turtle 형식으로 저장
+g.serialize(destination="first_triple.ttl", format="turtle")
+print("\n→ first_triple.ttl 파일 저장됨")
+```
+
+**실행**:
+
+```bash
+python first_triple.py
+```
+
+**출력**:
+
+```
+=== 트리플 목록 ===
+ex:Dog rdf:type ex:Animal .
+ex:Dog rdfs:label "Dog" .
+ex:Dog rdfs:comment "A domesticated carnivorous mammal" .
+
+→ first_triple.ttl 파일 저장됨
+```
+
+### 2.3 Turtle 파일 파싱 + SPARQL
+
+**파일: `query_pizza.py`**
+
+```python
+from rdflib import Graph
+
+# Turtle 파일 로드
+g = Graph()
+g.parse("pizza.owl", format="turtle")  # Protege 예제 파일
+
+# SPARQL 쿼리: 모든 피자 클래스 찾기
+query = """
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX pizza: <http://www.co-ode.org/ontologies/pizza/pizza.owl#>
+
+SELECT ?pizza ?label
+WHERE {
+    ?pizza a pizza:Pizza .
+    OPTIONAL { ?pizza rdfs:label ?label }
+}
+LIMIT 10
+"""
+
+# 쿼리 실행
+results = g.query(query)
+
+# 결과 출력
+print("=== 피자 클래스 목록 ===")
+for row in results:
+    print(f"Pizza: {row.pizza.split('#')[-1]} | Label: {row.label}")
+```
+
+### 2.4 OWL 추론 (owlrl)
+
+**파일: `owl_inference.py`**
+
+```python
+from rdflib import Graph
+import owlrl
+
+# 온톨로지 로드
+g = Graph()
+g.parse("my-ontology.ttl", format="turtle")
+print(f"추론 전 트리플 수: {len(g)}")
+
+# OWL 2 RL 추론 실행
+owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+
+print(f"추론 후 트리플 수: {len(g)}")
+print(f"새로 유추된 트리플 수: {len(g) - original_count}")
+
+# 결과 저장
+g.serialize(destination="inferred-ontology.ttl", format="turtle")
+print("→ inferred-ontology.ttl 파일 저장됨")
+```
+
+---
+
+## 3. Apache Jena Fuseki
+
+Fuseki는 SPARQL 엔드포인트 서버입니다. 온톨로지를 웹 서비스로 제공하고, SPARQL 쿼리를 연습하는 데 사용됩니다.
+
+### 3.1 설치 및 실행
+
+#### **다운로드**
+
+- [Apache Jena 다운로드 페이지](https://jena.apache.org/download/)
+- `apache-jena-fuseki-4.x.x.zip` 파일 다운로드 (최신 4.x 버전)
+
+#### **설치 및 실행 (공통)**
+
+1. **압축 해제**
+   ```bash
+   # Windows/macOS/Linux 공통
+   unzip apache-jene-fuseki-4.x.x.zip
+   cd apache-jene-fuseki-4.x.x
+   ```
+
+2. **서버 시작**
+   ```bash
+   # Windows:
+   fuseki-server.bat
+   
+   # macOS/Linux:
+   ./fuseki-server
+   ```
+
+3. **웹 인터페이스 접속**
+   - 브라우저에서 `http://localhost:3030` 접속
+   - Fuseki 관리 화면이 표시되어야 합니다
+
+#### **백그라운드 실행 (macOS/Linux)**
+
+```bash
+# 백그라운드로 실행
+nohup ./fuseki-server > /dev/null 2>&1 &
+
+# 프로세스 확인
+ps aux | grep fuseki
+
+# 종료
+killall java
+```
+
+#### **Windows 서비스로 등록**
+
+1. [NSSM (Non-Sucking Service Manager)](https://nssm.cc/) 다운로드
+2. 관리자 권한 CMD 실행:
+   ```cmd
+   nssm install Fuseki "C:\path\to\fuseki-server.bat"
+   nssm start Fuseki
+   ```
+
+### 3.2 데이터 업로드
+
+1. **새 데이터셋 생성**
+   - `http://localhost:3030` 접속
+   - `add dataset` 클릭
+   - `Dataset name`: `pizza` 입력
+   - `Dataset type`: `TDB2` 선택 (기본값)
+   - `Create dataset` 클릭
+
+2. **온톨로지 업로드**
+   - 생성된 `pizza` 데이터셋 클릭
+   - `Upload` 탭 선택
+   - `Choose files`로 `.ttl` 또는 `.owl` 파일 선택
+   - `Upload` 클릭
+
+3. **데이터 확인**
+   - `Query` 탭 선택
+   - 기본 쿼리 입력:
+     ```sparql
+     SELECT ?s ?p ?o
+     WHERE {
+       ?s ?p ?o
+     }
+     LIMIT 10
+     ```
+   - `Run` 클릭
+
+### 3.3 SPARQL 쿼리 실행
+
+#### **간단한 SELECT 쿼리**
+
+```sparql
+PREFIX pizza: <http://www.co-ode.org/ontologies/pizza/pizza.owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?pizza ?label
+WHERE {
+  ?pizza a pizza:Pizza .
+  OPTIONAL { ?pizza rdfs:label ?label }
+}
+ORDER BY ?label
+LIMIT 5
+```
+
+#### **CONSTRUCT 쿼리 (새로운 그래프 생성)**
+
+```sparql
+PREFIX pizza: <http://www.co-ode.org/ontologies/pizza/pizza.owl#>
+
+CONSTRUCT {
+  ?s a pizza:VegetarianPizza .
+}
+WHERE {
+  ?s a pizza:Pizza .
+  FILTER NOT EXISTS {
+    ?s pizza:hasTopping ?topping .
+    ?topping a pizza:MeatTopping .
+  }
+}
+```
+
+#### **ASK 쿼리 (Boolean 질의)**
+
+```sparql
+PREFIX pizza: <http://www.co-ode.org/ontologies/pizza/pizza.owl#>
+
+ASK {
+  ?s a pizza:MargheritaPizza .
+  ?s pizza:hasTopping pizza:MozzarellaTopping .
+}
+```
+
+---
+
+## 다음 단계
+
+### 1단계: Protege 기본 익히기
+- [ ] Protege 설치 완료
+- [ ] `pizza.owl` 예제 열어보기
+- [ ] 클래스, 속성, 제약조건 탐색
+- [ ] HermiT 추론기 실행해보기
+
+**→ Phase 1: 온톨로지 기초로 이동**
+
+### 2단계: Python + RDFLib 기본
+- [ ] Python 3.11+ 설치
+- [ ] 가상 환경 생성 및 RDFLib 설치
+- [ ] `first_triple.py` 실행
+- [ ] Turtle 파일 생성 및 확인
+
+**→ Phase 3: 추론과 일관성의 실습 준비**
+
+### 3단계: Fuseki 서버 실행
+- [ ] Apache Jena Fuseki 다운로드
+- [ ] `fuseki-server` 실행
+- [ ] `http://localhost:3030` 접속 확인
+- [ ] 데이터셋 생성 및 온톨로지 업로드
+
+**→ Phase 5: SPARQL 실습 준비**
+
+---
+
+## 추가 자료
+
+### 공식 문서
+- [Protege Wiki](https://github.com/protegeproject/protege/wiki)
+- [RDFLib Documentation](https://rdflib.readthedocs.io/)
+- [Apache Jena Fuseki](https://jena.apache.org/documentation/fuseki2/)
+
+### 커뮤니티
+- [Protégé 사용자 포럼](https://groups.google.com/g/protege-user)
+- [RDFLib GitHub Issues](https://github.com/RDFLib/rdflib/issues)
+
+### 예제 온톨로지
+- [Pizza Ontology](https://protege.github.io/protege/downloads/owl-api/pizza.owl)
+- [FOAF (Friend of a Friend)](http://xmlns.com/foaf/spec/)
+- [Schema.org](https://schema.org/)
+
+---
+
+## 문제 해결 FAQ
+
+**Q: Protege가 시작되지 않아요 (Java 오류)**
+A: Java 17 이상이 설치되어 있는지 확인하세요. `java -version` 명령어로 확인 가능합니다.
+
+**Q: RDFLib 설치 중 오류가 발생해요**
+A: Python 버전이 3.11 이상인지 확인하세요. `pip install --upgrade pip`로 pip를 최신으로 업데이트한 후 다시 시도해보세요.
+
+**Q: Fuseki가 3030 포트에서 시작되지 않아요**
+A: 포트가 이미 사용 중인지 확인하세요. `fuseki-server --port=3031`로 다른 포트를 사용할 수 있습니다.
+
+**Q: SPARQL 쿼리가 결과를 반환하지 않아요**
+A: 네임스페이스 PREFIX가 올바른지 확인하세요. Fuseki의 `Data` 탭에서 데이터가 업로드되었는지 확인하세요.
+
+---
+
+다음 가이드에서는 **Protege**를 사용하여 온톨로지 기본 개념(클래스, 속성, 제약조건)을 직접 모델링하면서 학습합니다.

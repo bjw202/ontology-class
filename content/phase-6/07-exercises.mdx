@@ -1,0 +1,413 @@
+---
+title: 7회차 - 실습
+description: 6단계 종합 실습 - FOAF, Dublin Core, Schema.org, Gene Ontology 직접 작성
+difficulty: intermediate
+---
+
+# 7회차: 종합 실습
+
+## 실습 안내
+
+이번 실습은 6단계에서 배운 5개 표준 온톨로지를 직접 코드로 작성해보는 종합 실습입니다. 각 실습은 **기본**과 **도전** 두 단계로 구성되어 있습니다.
+
+**실습 규칙**:
+- 실습 1, 2는 기본 실습 — 배운 개념을 직접 적용
+- 실습 3, 4는 도전 실습 — 더 깊이 생각하고 분석하는 과제
+- 코드는 Turtle 또는 JSON-LD 형식으로 작성
+- 각 실습의 "체크리스트"를 완성해야 실습을 마친 것으로 간주
+
+> **왜 직접 작성하는가?**
+> 온톨로지를 읽고 이해하는 것과, 직접 작성하는 것은 전혀 다른 경험입니다. 직접 작성해야만 "어떤 속성을 사용할지", "URI를 어떻게 설계할지", "이 정보가 정말 이 온톨로지로 표현할 수 있는지"를 실질적으로 고민하게 됩니다.
+
+---
+
+## 기본 실습 1: Schema.org JSON-LD로 학교 이벤트 마크업
+
+### 과제 설명
+
+여러분이 다니는 학교나 기관에서 다음과 같은 행사를 개최한다고 가정합니다:
+
+**행사 정보**:
+- 행사명: 2024 온톨로지 워크숍
+- 날짜: 2024년 11월 15일(금) 오후 2시 ~ 오후 6시
+- 장소: 공학관 302호 (또는 여러분의 실제 기관 강의실)
+- 주최: 여러분의 학과 또는 연구실
+- 온라인 참여도 가능 (Zoom 링크)
+- 참가비: 무료
+- 발표자: 본인 이름
+
+이 행사에 대한 **Schema.org JSON-LD 마크업**을 작성하세요.
+
+### 완성 예시
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "EducationEvent",
+  "name": "2024 온톨로지 워크숍",
+  "startDate": "2024-11-15T14:00:00+09:00",
+  "endDate": "2024-11-15T18:00:00+09:00",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
+  "location": [
+    {
+      "@type": "Place",
+      "name": "공학관 302호",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "대학로 1",
+        "addressLocality": "서울시",
+        "addressCountry": "KR"
+      }
+    },
+    {
+      "@type": "VirtualLocation",
+      "url": "https://zoom.us/j/example123"
+    }
+  ],
+  "organizer": {
+    "@type": "EducationalOrganization",
+    "name": "컴퓨터공학과 지식 표현 연구실",
+    "url": "https://example.ac.kr/lab"
+  },
+  "performer": {
+    "@type": "Person",
+    "name": "홍길동",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "예시 대학교"
+    }
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW",
+    "url": "https://example.ac.kr/register"
+  },
+  "description": "OWL 2와 주요 표준 온톨로지를 다루는 2024년 온톨로지 워크숍입니다.",
+  "inLanguage": "ko"
+}
+```
+
+### 작성 시 고려할 점
+
+1. `eventAttendanceMode`를 어떤 값으로 설정할지 결정하세요:
+   - `OfflineEventAttendanceMode`: 오프라인 전용
+   - `OnlineEventAttendanceMode`: 온라인 전용
+   - `MixedEventAttendanceMode`: 하이브리드
+
+2. `location`은 온라인과 오프라인 두 곳을 배열로 지정할 수 있습니다.
+
+3. 발표자가 여러 명이라면 `performer`를 배열로 작성하세요.
+
+### 체크리스트
+
+- [ ] `@context`와 `@type` 포함
+- [ ] `name`, `startDate`, `endDate` 작성 (ISO 8601 형식)
+- [ ] `location` 작성 (오프라인 장소 또는 온라인 URL)
+- [ ] `organizer` 작성
+- [ ] `offers` 작성 (무료라면 price: "0")
+- [ ] `description` 작성
+- [ ] 구글 리치 결과 테스트 도구(search.google.com/test/rich-results)로 검증
+
+---
+
+## 기본 실습 2: FOAF로 본인 프로필 트리플 작성
+
+### 과제 설명
+
+본인의 학술 프로필을 FOAF Turtle 형식으로 작성하세요.
+
+**포함해야 할 내용**:
+- 본인에 대한 기본 정보 (이름, 소속)
+- 적어도 3개의 관심 주제 (`foaf:interest`)
+- 적어도 2명의 지인 (`foaf:knows`)
+- 본인이 만든 것 한 가지 (`foaf:made` — 논문, 프로젝트, 소프트웨어 등)
+- 온라인 계정 정보 (GitHub, 학술 프로필 등)
+
+### 완성 예시
+
+```turtle
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema:  <https://schema.org/> .
+@prefix dbr:     <https://dbpedia.org/resource/> .
+
+# 본인 프로필
+<https://example.ac.kr/people/hong-gildong>
+    a foaf:Person ;
+    foaf:name "홍길동" ;
+    foaf:givenName "길동" ;
+    foaf:familyName "홍" ;
+    foaf:nick "gildong" ;
+    foaf:mbox <mailto:hong@example.ac.kr> ;
+    foaf:homepage <https://hong.example.ac.kr> ;
+
+    # 소속
+    schema:affiliation [
+        a foaf:Organization ;
+        foaf:name "예시 대학교 컴퓨터공학과"
+    ] ;
+
+    # 관심 주제 (DBpedia 리소스로 연결)
+    foaf:interest dbr:Semantic_Web ;
+    foaf:interest dbr:Ontology_(computer_science) ;
+    foaf:interest dbr:Knowledge_graph ;
+
+    # 온라인 계정
+    foaf:account [
+        a foaf:OnlineAccount ;
+        foaf:accountServiceHomepage <https://github.com> ;
+        foaf:accountName "hong-gildong"
+    ] ;
+
+    # 만든 것
+    foaf:made <https://example.ac.kr/papers/ontology-2024> ;
+
+    # 지인
+    foaf:knows <https://example.ac.kr/people/kim-chulsoo> ;
+    foaf:knows <https://example.ac.kr/people/lee-younghee> .
+
+# 내가 만든 논문
+<https://example.ac.kr/papers/ontology-2024>
+    a foaf:Document ;
+    foaf:name "한국어 의료 온톨로지 설계 방법론" ;
+    foaf:maker <https://example.ac.kr/people/hong-gildong> .
+
+# 지인 1
+<https://example.ac.kr/people/kim-chulsoo>
+    a foaf:Person ;
+    foaf:name "김철수" ;
+    foaf:knows <https://example.ac.kr/people/hong-gildong> .
+
+# 지인 2
+<https://example.ac.kr/people/lee-younghee>
+    a foaf:Person ;
+    foaf:name "이영희" .
+```
+
+### 체크리스트
+
+- [ ] 올바른 `@prefix` 선언
+- [ ] `foaf:Person` 타입 명시
+- [ ] `foaf:name` 또는 `foaf:givenName` + `foaf:familyName`
+- [ ] 적어도 3개의 `foaf:interest`
+- [ ] 적어도 2명의 `foaf:knows` (양방향 관계 포함)
+- [ ] `foaf:made`로 본인이 만든 것 연결
+- [ ] Apache Jena 또는 온라인 Turtle 파서로 문법 검증
+
+---
+
+## 도전 실습 3: Gene Ontology DAG에서 다중 상속 예시 찾기
+
+### 과제 설명
+
+Gene Ontology는 트리가 아닌 DAG(Directed Acyclic Graph) 구조를 사용합니다. 하나의 GO 용어가 **두 개 이상의 부모 용어**를 가질 수 있습니다.
+
+다음 작업을 수행하세요:
+
+**1단계**: AmiGO 2(amigo.geneontology.org) 또는 QuickGO(www.ebi.ac.uk/QuickGO)에서 다음 GO 용어를 검색하세요:
+- `GO:0005635` (nuclear envelope, 핵막)
+- `GO:0005685` (U1 snRNP)
+- `GO:0006355` (regulation of transcription by RNA polymerase II)
+
+**2단계**: 각 GO 용어에 대해 다음을 분석하세요:
+- 부모 용어(is_a 관계의 상위 용어) 목록
+- 자식 용어 목록
+- 부모가 여러 개라면 각 부모에서 이 용어까지의 경로가 다른지 확인
+
+**3단계**: 다중 상속이 생물학적으로 왜 필요한지 한국어로 2-3문장으로 설명하세요.
+
+### 분석 가이드
+
+GO:0005635 (nuclear envelope, 핵막)의 경우:
+
+```
+부모 1: GO:0031965 (nuclear membrane)
+  - 핵막의 측면: 막(membrane)의 일종
+
+부모 2: GO:0044444 (cytoplasmic part)
+  - 위치의 측면: 세포질의 일부
+
+부모 3: GO:0012505 (endomembrane system)
+  - 기능적 측면: 내막계의 일부
+```
+
+이처럼 핵막은 "막이다", "세포질의 일부이다", "내막계의 일부이다" 세 가지 관점에서 동시에 분류됩니다. 트리 구조라면 이 중 하나만 선택해야 하지만, DAG는 셋 모두를 표현할 수 있습니다.
+
+### 제출 형식
+
+```
+GO 용어: GO:XXXXXXX [용어 이름]
+부모 용어:
+  1. GO:XXXXXXX [부모 이름] — [이 부모 관계의 생물학적 의미]
+  2. GO:XXXXXXX [부모 이름] — [이 부모 관계의 생물학적 의미]
+  ...
+
+다중 상속이 필요한 이유:
+[2-3문장으로 설명]
+```
+
+### 체크리스트
+
+- [ ] 적어도 2개의 GO 용어 분석
+- [ ] 각 용어에서 2개 이상의 부모 용어 식별
+- [ ] 각 부모 관계의 생물학적 의미 설명
+- [ ] 다중 상속이 트리보다 DAG를 사용하는 이유를 설명
+
+---
+
+## 도전 실습 4: Dublin Core로 논문 메타데이터 기술
+
+### 과제 설명
+
+다음 조건을 충족하는 **학술 논문 메타데이터**를 Dublin Core와 dcterms를 사용해 Turtle 형식으로 기술하세요:
+
+**조건**:
+- 실제로 존재하는 논문을 선택하거나, 가상의 논문을 만들어도 됩니다
+- dc 네임스페이스의 기본 요소와 dcterms 확장 요소를 **모두** 사용해야 합니다
+- 날짜는 dcterms의 세분화된 속성(`dcterms:created`, `dcterms:issued`)을 사용하세요
+- `dcterms:isPartOf`로 이 논문이 속한 저널이나 컨퍼런스 연결
+- `dc:rights`에 Creative Commons 라이선스 명시
+
+**추가 도전**: Schema.org를 사용해 같은 논문의 메타데이터를 JSON-LD로도 작성하고, 두 표현 방식의 차이를 비교하세요.
+
+### 완성 예시
+
+```turtle
+@prefix dc:       <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf:     <http://xmlns.com/foaf/0.1/> .
+@prefix bibo:     <http://purl.org/ontology/bibo/> .
+
+# 논문 자체
+<https://doi.org/10.1000/my-ontology-paper>
+    a bibo:AcademicArticle ;
+
+    # Dublin Core 기본 요소
+    dc:title "한국어 생의학 온톨로지 구축을 위한 방법론 연구" ;
+    dc:creator "홍길동" ;
+    dc:creator "김연구" ;
+    dc:contributor "이리뷰" ;   # 리뷰어/편집자
+    dc:subject "온톨로지 공학" ;
+    dc:subject "생의학 정보학" ;
+    dc:subject "한국어 처리" ;
+    dc:description """
+        본 논문은 한국어 생의학 문헌에서 온톨로지를 반자동으로
+        구축하는 방법론을 제안한다. SNOMED CT와의 호환성을 고려하여
+        OWL 2 EL 프로파일을 채택하였다.
+    """ ;
+    dc:publisher "한국정보과학회" ;
+    dc:type "Text" ;
+    dc:format "application/pdf" ;
+    dc:identifier "doi:10.1000/my-ontology-paper" ;
+    dc:identifier "ISSN 1234-5678" ;
+    dc:language "ko" ;
+    dc:rights "CC BY 4.0 https://creativecommons.org/licenses/by/4.0/" ;
+    dc:coverage "2020-2024, 한국어 의료 데이터" ;
+
+    # dcterms 확장 요소 (더 정밀한 기술)
+    dcterms:created "2023-06-01"^^xsd:date ;
+    dcterms:modified "2024-01-15"^^xsd:date ;
+    dcterms:issued "2024-03-20"^^xsd:date ;
+    dcterms:dateAccepted "2024-02-10"^^xsd:date ;
+
+    # 관계
+    dcterms:isPartOf <https://journal.example.com/vol-10-no-2> ;
+    dcterms:references <https://doi.org/10.1234/snomed-korean> ;
+    dcterms:references <https://doi.org/10.5678/owl2-el-reasoning> .
+
+# 이 논문이 게재된 저널 호
+<https://journal.example.com/vol-10-no-2>
+    dc:title "한국정보과학회논문지 제10권 제2호" ;
+    dc:date "2024-03-20" ;
+    dc:publisher "한국정보과학회" .
+```
+
+### Schema.org 비교 버전 (추가 도전)
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "한국어 생의학 온톨로지 구축을 위한 방법론 연구",
+  "author": [
+    {"@type": "Person", "name": "홍길동"},
+    {"@type": "Person", "name": "김연구"}
+  ],
+  "datePublished": "2024-03-20",
+  "dateCreated": "2023-06-01",
+  "dateModified": "2024-01-15",
+  "publisher": {
+    "@type": "Organization",
+    "name": "한국정보과학회"
+  },
+  "about": [
+    "온톨로지 공학",
+    "생의학 정보학"
+  ],
+  "identifier": "doi:10.1000/my-ontology-paper",
+  "inLanguage": "ko",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "isPartOf": {
+    "@type": "Periodical",
+    "name": "한국정보과학회논문지"
+  }
+}
+```
+
+### 비교 분석 질문
+
+Dublin Core 버전과 Schema.org 버전을 작성했다면 다음 질문에 답하세요:
+
+1. 두 버전에서 **표현할 수 있는 것**은 무엇이 같고 무엇이 다른가?
+2. `dcterms:dateAccepted` (심사 수락일)에 해당하는 Schema.org 속성이 있는가?
+3. 도서관 시스템에서 이 논문 정보를 처리한다면 어느 형식이 더 적합한가? 이유는?
+4. 검색 엔진 최적화가 목적이라면 어느 형식이 더 적합한가? 이유는?
+
+### 체크리스트
+
+- [ ] dc 네임스페이스 기본 15개 요소 중 10개 이상 사용
+- [ ] dcterms 확장 요소 5개 이상 사용 (날짜 3종 이상 포함)
+- [ ] `dcterms:isPartOf`로 저널과 연결
+- [ ] `dc:rights`에 CC 라이선스 명시
+- [ ] (추가 도전) Schema.org JSON-LD 버전도 작성
+- [ ] (추가 도전) 두 표현 방식의 차이를 3-4문장으로 비교
+
+---
+
+## 실습 정리 및 성찰
+
+모든 실습을 완료했다면, 다음 질문에 대해 생각해보세요:
+
+### 성찰 질문
+
+1. **어떤 온톨로지가 작성하기 가장 쉬웠나요?** 왜 그렇게 느꼈나요?
+
+2. **가장 어렵게 느껴진 개념이 있었나요?** 예를 들어, FOAF에서 URI 설계, GO에서 DAG 구조 분석, Dublin Core에서 기본 요소와 dcterms 구분 등
+
+3. **실제 업무나 연구에서 이 온톨로지들을 활용할 수 있는 시나리오**를 한 가지 이상 생각해보세요.
+
+4. **여러 온톨로지를 조합해야 하는 상황**을 만난다면 어떻게 접근하겠나요?
+
+> **연결 포인트: 이론에서 실천으로**
+> 이번 실습은 6단계 전체의 학습을 코드로 검증하는 과정입니다. 온톨로지를 이해하는 것과 실제로 작성하는 것 사이에는 항상 간격이 있습니다. 이 간격을 줄이는 가장 좋은 방법은 반복 실습입니다. 실습 중에 생기는 질문들("이 속성이 맞는지", "URI를 어떻게 설계할지")이 진짜 학습입니다.
+
+---
+
+## 6단계 전체 요약
+
+| 회차 | 온톨로지 | 핵심 학습 |
+|------|---------|---------|
+| 1회차 | FOAF | 소셜 그래프를 RDF로, `foaf:Person`, `foaf:knows` |
+| 2회차 | Dublin Core | 15개 요소의 보편적 메타데이터, dcterms 확장 |
+| 3회차 | Schema.org | JSON-LD 마크업, 리치 결과, 검색 엔진 연동 |
+| 4회차 | Gene Ontology | DAG 구조, 3가지 측면, 어노테이션 증거 코드 |
+| 5회차 | SNOMED CT + FHIR | 의료 용어 체계, FHIR 리소스, OWL 2 EL |
+| 6회차 | 비교 분석 | 선택 기준, 성공/실패 요인, 조합 전략 |
+| 7회차 | 실습 | Schema.org, FOAF, GO, Dublin Core 직접 작성 |
+
+**수고하셨습니다!** 6단계를 완료하셨습니다. 다음 단계에서는 이 표준 온톨로지들을 바탕으로 실제 도메인 온톨로지를 설계하는 방법을 배웁니다.
