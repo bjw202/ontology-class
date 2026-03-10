@@ -1,0 +1,427 @@
+---
+title: 핵심 구성 요소
+description: Object Type, Link Type, Action Type, Function, Interface의 역할과 관계를 분석합니다
+difficulty: advanced
+---
+
+# 핵심 구성 요소 — 불량 하나를 끝까지 추적하는 여정
+
+> "공장에서 불량이 하나 터졌다. 원인을 찾고, 조치하고, 재발을 막으려면 어떤 정보가 필요한가?"
+
+이 질문 하나로 Palantir 온톨로지의 6가지 핵심 구성 요소를 모두 만나게 된다. 이번 세션에서는 백과사전식 나열 대신, **하나의 불량 조사 시나리오**를 처음부터 끝까지 따라가며 각 구성 요소가 왜 필요한지 체감해본다.
+
+## 학습 목표
+
+1. 불량 조사 시나리오를 따라가며 **6가지 구성 요소**(Object Type, Property, Link Type, Function, Action Type, Interface)가 각각 어떤 역할을 하는지 설명한다
+2. 각 구성 요소가 **없을 때 어떤 문제가 생기는지**(Before)와 **있을 때 어떻게 해결되는지**(After)를 대비하여 설명한다
+3. OWL/RDF의 대응 개념과 Palantir 구현의 차이를 실제 사례로 비교한다
+
+## 이번 세션 전체 그림
+
+아래 다이어그램은 불량 조사의 흐름을 따라 6가지 구성 요소가 어떻게 연결되는지 보여준다.
+
+<MermaidDiagram chart={`graph TD
+    subgraph scenario["불량 조사 시나리오 흐름"]
+        Q1["1. 어떤 개체들이 관련되나?"]
+        Q2["2. 이 개체들은 어떤 특성을 갖나?"]
+        Q3["3. 개체들이 어떻게 연결되나?"]
+        Q4["4. 어떻게 판단하나?"]
+        Q5["5. 무엇을 실행하나?"]
+        Q6["6. 유사한 것들을 묶어 처리하려면?"]
+    end
+    subgraph components["온톨로지 구성 요소"]
+        OT["Object Type\n개체 정의"]
+        PR["Property\n특성 정의"]
+        LT["Link Type\n관계 정의"]
+        FN["Function\n판단 로직"]
+        AT["Action Type\n변경 통제"]
+        IF["Interface\n공통 형태"]
+    end
+    Q1 --> OT
+    Q2 --> PR
+    Q3 --> LT
+    Q4 --> FN
+    Q5 --> AT
+    Q6 --> IF
+    OT --> PR
+    OT --> LT
+    LT --> FN
+    FN --> AT
+    OT -.->|구현| IF`} caption="불량 조사 시나리오와 6가지 구성 요소의 대응" />
+
+---
+
+## 시나리오 시작: 오늘 아침, 불량이 발생했다
+
+월요일 오전 9시. B동 생산라인의 품질 검사 시스템이 경보를 울린다.
+
+```
+[경보] Lot-2024-0312 불량률 급증 — 정상 기준 0.5% → 현재 4.2%
+```
+
+품질 엔지니어인 김 과장은 원인을 찾아야 한다. 이 불량이 어느 설비에서, 어떤 조건에서, 왜 발생했는지 추적해야 한다. 이 조사 과정을 따라가면서 온톨로지의 구성 요소를 하나씩 만나보자.
+
+---
+
+## 1단계: "무엇이 관련되어 있나?" — Object Type
+
+김 과장이 가장 먼저 해야 할 일은 **이 불량과 관련된 것들을 파악**하는 것이다. 불량 자체, 불량이 발생한 Lot, 그 Lot을 가공한 설비, 설비를 관리하는 작업자... 이런 것들이 모두 조사 대상이다.
+
+온톨로지에서 이 "조사 대상이 되는 것들"을 정의하는 것이 **Object Type**(객체 타입)이다. 실세계의 개체(사물, 사건, 사람 등)를 하나의 타입으로 정의한 것이다. OWL의 클래스(owl:Class)와 개념적으로 유사하다.
+
+```
+이번 불량 조사에 등장하는 Object Type들:
+
+  Machine     — 설비 (CNC-B07 밀링머신)
+  Lot         — 생산 묶음 (Lot-2024-0312)
+  Defect      — 불량 기록 (표면 스크래치 다수 발생)
+  Employee    — 작업자 (김 과장, 정비팀 이 기사)
+  WorkOrder   — 작업 지시서
+```
+
+여기서 핵심은, 각 Object Type이 **실제 데이터가 저장된 곳과 직접 연결**된다는 점이다. 각 객체의 원본 데이터가 어디서 오는지를 연결해주는 것 — Palantir에서는 이를 **Backing Datasource(뒷받침 데이터소스)**라 부른다.
+
+```
+Object Type: Machine
+├── Properties: machineId, name, status, lastMaintenanceDate, currentSensorTemp...
+├── Backing Datasource: IoT 센서 스트림 + ERP 설비 테이블 (자동 조인)
+├── Status: endorsed (핵심 자원, 함부로 삭제 불가)
+└── Security: 설비 담당자만 status 편집 가능
+```
+
+> **왜 필요한가?** 김 과장이 "CNC-B07 설비 상태를 보여줘"라고 조회하면, IoT 센서의 실시간 온도와 ERP의 정비 이력이 **자동으로 통합된 하나의 객체**로 나온다. Object Type이 없다면? IoT 시스템에 따로 접속하고, ERP에 따로 로그인해서, 수동으로 데이터를 맞춰봐야 한다. 시스템 3개를 오가며 엑셀에 복붙하는 것이 현실이다.
+
+> **연결 포인트 → Phase 2**: OWL의 owl:Individual(인스턴스)은 사람이 하나하나 선언한다. Palantir의 Object 인스턴스는 Backing Datasource의 데이터 파이프라인이 자동으로 생성하고 갱신한다. 설비가 1000대여도 일일이 등록할 필요가 없다.
+
+### Object Type 생명주기
+
+Object Type도 제품처럼 생애주기가 있다. 처음에는 실험적으로 만들어보고, 검증되면 운영에 투입하고, 핵심 자원이 되면 함부로 바꿀 수 없게 보호한다.
+
+```
+experimental → active → endorsed
+  (실험 단계)    (운영 중)   (핵심 자원)
+                                ↓
+                            deprecated → 삭제 예정 공지 + 대체 리소스 안내
+```
+
+---
+
+## 2단계: "각 개체의 어떤 특성을 봐야 하나?" — Property
+
+김 과장은 설비 CNC-B07의 상태를 확인한다. 그런데 "상태"라고 해도 볼 것이 많다 — 현재 온도, 마지막 정비일, 가동 상태, 불량 검사 사진...
+
+객체가 가진 이런 **특성 하나하나를 정의**하는 것이 **Property**(속성)이다. OWL의 DatatypeProperty와 유사하다.
+
+**기본 타입:** `string`, `integer`, `double`, `boolean`, `date`, `timestamp`, `geopoint` — 이 정도는 어떤 데이터 시스템에나 있다.
+
+Palantir가 특별한 것은 **운영 현장에서 실제로 필요한 확장 타입**을 제공한다는 점이다.
+
+### 확장 타입: 현장에서 정말 필요한 것들
+
+**미디어 참조(Media Reference) — "사진 한 장이 백 마디 말보다 낫다":**
+
+불량 검사에서 가장 강력한 증거는 사진이다. Media Reference를 쓰면 불량 사진이 Defect 객체에 직접 붙는다. 별도 파일 서버에서 찾을 필요 없이, 불량 기록을 열면 사진이 바로 보인다. 나아가 비전-언어 모델(VLM)이 이 사진을 자동 분석할 수도 있다.
+
+**시맨틱 검색 인덱스(Semantic Search) — "이런 불량 전에도 본 것 같은데?":**
+
+김 과장이 "표면 스크래치가 불규칙하게 발생하는 패턴"을 검색하면, 정확히 같은 단어가 아니어도 **의미가 유사한 과거 불량 기록**이 나온다. string 속성에 벡터 임베딩 인덱스를 붙여서 의미 유사도 검색을 가능하게 한 것이다.
+
+**시계열(Timeseries) — "이 설비 온도가 언제부터 올라갔지?":**
+
+```
+machine.currentSensorTemp.latestValue    → 지금 온도
+machine.currentSensorTemp.history()      → 지난 7일간 온도 변화 추이
+```
+
+센서 데이터처럼 계속 변하는 값의 현재 상태와 이력을 효율적으로 조회한다.
+
+> **왜 필요한가?** 김 과장이 불량 원인을 찾으려면 설비 온도 이력, 불량 사진, 유사 과거 사례가 모두 필요하다. 이 데이터가 각각 다른 시스템에 흩어져 있다면 조사에 며칠이 걸린다. Property의 확장 타입 덕분에 이 모든 정보가 하나의 객체 안에서 조회된다.
+
+### Shared Property — 같은 말을 두 번 정의하지 않기
+
+여러 Object Type이 `location`이라는 속성을 공통으로 쓴다면?
+
+```
+일반 방식:
+  Machine.location, Vehicle.location, Employee.location 각각 따로 정의
+  → 누군가 Machine.location만 geopoint로 바꾸면? 나머지는 여전히 string
+  → 같은 "위치"인데 정의가 다름 = 데이터 비교 불가
+
+Shared Property 방식:
+  한 번 정의: location → geopoint
+  Machine, Vehicle, Employee 모두 이 공유 정의를 참조
+  → 정의가 바뀌면 전체에 일괄 적용
+```
+
+---
+
+## 3단계: "이 개체들이 어떻게 연결되나?" — Link Type
+
+온도 이력을 보니 CNC-B07의 온도가 3일 전부터 서서히 올라가고 있었다. 그런데 이 설비가 **어떤 라인에서, 어떤 Lot을 가공했는지**를 알아야 불량 범위를 특정할 수 있다.
+
+개체와 개체 사이의 **관계를 정의**하는 것이 **Link Type**(링크 타입)이다. OWL의 Object Property(owl:ObjectProperty)에 대응한다.
+
+### OWL과의 결정적 차이: 데이터 마이그레이션이 필요 없다
+
+```
+OWL/RDF 방식:
+  <machine:CNC-B07> <assignedTo> <line:B-Main>  ← 트리플을 새로 추가해야 함
+  → 기존 DB와 별도로 트리플 저장소를 만들어야 함
+  → 데이터 마이그레이션 필요 (수개월 소요, 높은 위험)
+
+Palantir 방식:
+  machine_table:  | machineId  | lineId  | name     |
+  line_table:     | lineId     | name    |          |
+
+  Link Type = machine_table.lineId 와 line_table.lineId 를 조인
+  → 기존 DB 구조를 그대로 두고, 위에 관계만 정의
+  → 마이그레이션 없이 온톨로지 도입 가능
+```
+
+> **왜 필요한가?** 실제 기업 환경에서 "데이터를 새 형식으로 옮기자"는 말은 수개월의 프로젝트를 의미한다. Palantir의 Link Type은 기존 데이터베이스를 건드리지 않고 관계를 표현한다. 이것이 온톨로지를 점진적으로 도입할 수 있게 만드는 핵심이다.
+
+> **연결 포인트 → Phase 3**: Phase 3에서 배운 집합 관계와 관계(Relation)의 논리적 기초가 Link Type 설계에 직접 적용된다. 링크의 카디널리티(1:1, 1:N, N:N)와 방향성이 도메인 모델링의 핵심이다.
+
+### Link를 따라 불량 원인 추적하기
+
+김 과장은 Link를 따라가며 불량의 파급 범위를 파악한다.
+
+```
+탐색 경로:
+
+Defect (Lot-2024-0312 불량)
+  → [detectedIn] → Lot (Lot-2024-0312)
+  → [processedBy] → Machine (CNC-B07)
+  → [assignedTo] → ProductionLine (B-Main)
+  → [scheduledFor] → WorkOrder (이번 주 예정 작업들)
+
+결과: CNC-B07이 이번 주에 처리할 Lot이 3개 더 있다!
+      → 불량이 퍼지기 전에 조치가 필요하다
+```
+
+SQL로 이걸 하면 4개 테이블 조인에 복잡한 WHERE 절이 필요하다. Link Type 덕분에 "관계를 따라가기"라는 직관적 탐색이 가능하다.
+
+---
+
+## 4단계: "어떻게 판단하나?" — Function
+
+불량 원인이 설비 과열로 좁혀졌다. 그런데 "이 설비가 정말 위험한 상태인가?"를 어떻게 판단할까? 단순히 온도가 높다고 무조건 정비하면 생산 차질이 생긴다. 정비 이력, 최근 불량률, 센서 데이터를 종합해서 **건강 점수를 계산**해야 한다.
+
+이런 **도메인 판단 로직을 코드로 정의**한 것이 **Function**(함수)이다. 단순 쿼리가 아니라, "어떻게 판단할 것인가"의 비즈니스 규칙을 담는다.
+
+```typescript
+// 설비 건강 점수 계산 Function
+function calculateMachineHealthScore(machine: Machine): number {
+  const daysSinceLastMaintenance =
+    daysDiff(machine.lastMaintenanceDate, now());
+  const defectRate =
+    machine.getLinkedDefects()
+           .filter(d => d.detectedAt > thirtyDaysAgo())
+           .length / 30;
+  const tempScore =
+    machine.currentSensorTemp < machine.normalTempMax ? 1.0 : 0.5;
+
+  return (100 - daysSinceLastMaintenance * 0.5) * (1 - defectRate) * tempScore;
+}
+```
+
+김 과장이 이 Function을 실행하면: CNC-B07 건강 점수 = **32점** (위험 구간).
+
+> **왜 필요한가?** "건강 점수"라는 판단 기준이 대시보드에도 쓰이고, AI 에이전트도 쓰고, 외부 앱에서도 쓰인다고 하자. 이 로직이 세 곳에 각각 다르게 구현되어 있다면? 대시보드는 32점인데 AI는 58점이라고 하면 혼란이 생긴다. Function은 판단 로직을 **한 곳에 정의**해서 모든 소비자가 동일한 기준을 사용하게 보장한다.
+
+### Function이 쓰이는 네 가지 곳
+
+```
+1. Action Type의 사전 검증:
+   "건강 점수가 50점 이하인 설비만 정비 요청 가능"
+
+2. Workshop 대시보드:
+   설비별 건강 점수를 실시간 화면에 표시
+
+3. AIP 에이전트의 도구(Tool):
+   AI가 "CNC-B07 건강 점수 알려줘"라고 Function을 호출
+
+4. OSDK 외부 앱:
+   협력사 시스템에서 설비 상태를 API로 조회
+```
+
+---
+
+## 5단계: "그래서 무엇을 실행하나?" — Action Type
+
+건강 점수 32점. 위험하다. 김 과장은 **정비를 요청하고 해당 Lot을 격리**해야 한다. 그런데 그냥 DB에서 직접 `UPDATE machine SET status = 'maintenance'`를 실행하면 될까?
+
+**안 된다.** 그래서 Palantir 온톨로지에는 **Action Type**(액션 타입)이 있다. 이것은 OWL에 없는 개념이며, Palantir 온톨로지를 단순 데이터 모델과 구분하는 **핵심 독창성**이다.
+
+**원칙: "모든 쓰기(Write)는 Action을 통해야 한다. 직접 수정은 불가능하다."**
+
+```
+Action Type: RequestMaintenance (정비 요청)
+
+입력 파라미터:
+  - machineId: Machine 객체 (필수)
+  - reason: string (필수, 최소 20자)
+  - priority: enum(low / medium / high / critical)
+
+유효성 검사 (Function 호출):
+  - machine.healthScore < 50 (건강 점수 기반 판단)
+  - machine.status != 'maintenance' (이미 정비 중이면 중복 요청 불가)
+
+변경 내용:
+  - machine.status → 'maintenance'
+  - 새 WorkOrder 생성 → 정비팀에 할당
+
+부수 효과:
+  - 정비팀에 알림 발송
+  - 감사 로그 자동 기록 (누가, 언제, 왜 정비 요청했는지)
+```
+
+### Before vs. After: Action이 만드는 차이
+
+```
+Before (직접 DB 수정):
+  김 과장이 DB에 직접 UPDATE 실행
+  → 유효성 검사 없음 — 이미 정비 중인 설비에 또 정비 요청 가능
+  → 감사 추적 불가 — 누가 왜 바꿨는지 기록 없음
+  → AI 에이전트가 사용 불가 — 같은 변경을 AI가 하려면 별도 API 필요
+
+After (Action 기반):
+  모든 변경 → Action Type → 유효성 검증 → 적용 → 자동 감사
+  → 잘못된 변경이 사전에 차단됨
+  → 변경 이력 100% 보존 — 규제 감사 대응 가능
+  → 인간과 AI가 동일한 경로로 변경 — 거버넌스 일원화
+```
+
+> **왜 필요한가?** 불량이 터진 긴급 상황에서 누군가 DB를 직접 수정해버리면 나중에 "누가 이걸 바꿨지?"를 추적할 수 없다. Action Type은 모든 변경을 **사전 정의된 경로**로 강제하여 거버넌스를 구조적으로 보장한다. 특히 AI 에이전트가 자동으로 조치를 취하는 시대에는, 모든 변경이 검증 가능한 경로를 거치는 것이 필수다.
+
+### Action Type의 세 가지 실행 모드
+
+```
+1. 즉시 실행 (Direct):     파라미터 입력 → 유효성 검사 → 바로 적용
+   예: 낮은 위험도 자동화 작업
+
+2. 검토 후 실행 (Staged):  AI가 제안 → 사람이 검토 → 승인 시 적용
+   예: AI가 "이 설비 정비하세요"라고 제안하면 김 과장이 검토 후 승인
+
+3. 자동화 실행 (Auto):     이벤트 트리거 → 조건 검사 → 자동 실행
+   예: 건강 점수가 20점 이하로 떨어지면 자동 긴급 정비 요청
+```
+
+---
+
+## 6단계: "유사한 개체들을 묶어 처리하려면?" — Interface
+
+정비 요청을 걸었다. 그런데 공장에는 설비(Machine)만 있는 게 아니다. 운반 차량(Vehicle), 생산 도구(ProductionTool)도 있고, 이것들도 모두 **정기 점검과 정비가 필요한 자산**이다.
+
+"자산 전체에서 정비가 필요한 것을 찾아줘"라는 요청을 처리하려면 Machine, Vehicle, ProductionTool을 **하나로 묶어서 조회**할 수 있어야 한다. 이것을 가능하게 하는 것이 **Interface**(인터페이스)이다.
+
+Interface는 여러 Object Type이 공통으로 가져야 할 **형태(shape)**를 정의한다. 쉽게 말해 "이 속성들을 가지고 있으면 자산으로 취급하겠다"는 **계약서** 같은 것이다. OWL에서는 rdfs:subClassOf로 계층적 상속을 하는데, Palantir의 Interface는 형태 기반으로 더 유연하게 작동한다.
+
+```
+Interface: IAsset (자산 공통 형태)
+  - assetId: string
+  - status: string
+  - location: geopoint
+  - lastInspectedAt: timestamp
+
+Machine implements IAsset       ← 이 속성들을 다 가지고 있으니 자산
+Vehicle implements IAsset       ← 이것도 자산
+ProductionTool implements IAsset ← 이것도 자산
+
+→ "현재 위치 반경 500m 내 정비 필요한 자산 전체" = 단 하나의 쿼리로 처리
+```
+
+> **왜 필요한가?** Interface 없이 "정비 필요한 자산 전체"를 조회하려면, Machine 조회 쿼리, Vehicle 조회 쿼리, ProductionTool 조회 쿼리를 **따로따로** 만들어야 한다. 새로운 자산 유형(예: Robot)이 추가되면? 또 쿼리를 하나 더 만들어야 한다. Interface가 있으면 Robot이 IAsset을 구현하기만 하면 기존 쿼리가 자동으로 Robot도 포함한다.
+
+### OWL subClassOf vs. Palantir Interface
+
+| 특성 | OWL rdfs:subClassOf | Palantir Interface |
+|------|--------------------|--------------------|
+| 관계 유형 | 계층적 상속 ("A는 B의 하위 개념") | 형태 기반 계약 ("이 속성들을 가지면 됨") |
+| 추론 | Description Logic 추론 가능 | 추론 없음, 실행 시 타입 확인 |
+| 유연성 | 다중 상속 가능하나 복잡해짐 | 여러 Interface를 간단히 구현 |
+| 목적 | 지식 표현의 분류 체계 | 코드 재사용과 쿼리 통합 |
+
+> **연결 포인트 → Phase 4**: Phase 4에서 배운 분류 체계(taxonomy)가 Interface 설계의 이론적 토대다. "무엇이 자산인가?"라는 분류 기준을 정의하는 것이 곧 Interface 설계이다.
+
+---
+
+## 시나리오 완결: 불량 조사의 전체 흐름
+
+김 과장의 불량 조사를 처음부터 끝까지 정리하면:
+
+```
+1. [Object Type]  관련 개체 파악 — Machine, Lot, Defect 확인
+2. [Property]     설비 온도 이력, 불량 사진, 유사 사례 조회
+3. [Link Type]    Defect → Lot → Machine → ProductionLine 관계 추적
+4. [Function]     설비 건강 점수 계산 → 32점 (위험)
+5. [Action Type]  정비 요청 실행 + Lot 격리 + 자동 감사 기록
+6. [Interface]    같은 라인의 다른 자산들도 일괄 점검 조회
+```
+
+이 모든 과정이 **하나의 온톨로지 위에서** 일어난다. 6개의 구성 요소가 따로 노는 것이 아니라, 하나의 조사 과정에서 자연스럽게 연결된다.
+
+---
+
+## 흔한 오해
+
+> **흔한 오해**: "Action Type은 그냥 API 엔드포인트 아닌가? REST API로 만들어도 같은 거 아닌가?"
+
+> **실제로는**: 일반 REST API는 각 엔드포인트가 독립적으로 구현되어 일관된 거버넌스가 없다. Action Type은 온톨로지 스키마의 일부로 정의되어 (1) 유효성 검사가 스키마에서 자동 적용되고, (2) 감사 로그가 자동 기록되며, (3) 보안 정책이 Action 레벨에서 적용되고, (4) AI 에이전트가 인간과 동일한 경로로 사용한다. 이 네 가지가 일반 API와의 구조적 차이다.
+
+> **흔한 오해**: "Function은 데이터베이스의 저장 프로시저(Stored Procedure)와 같다."
+
+> **실제로는**: 저장 프로시저는 특정 DB에 종속되어, 그 DB가 바뀌면 로직도 다시 짜야 한다. Function은 온톨로지의 Object와 Link를 입력으로 받아 작동하는 도메인 로직이다. 하나의 Function이 Workshop 대시보드, AIP 에이전트, OSDK 외부 앱 등 다양한 곳에서 동일하게 호출된다. 또한 Function은 AIP 에이전트의 Tool로 자동 노출되어 자연어 인터페이스에서도 호출할 수 있다.
+
+---
+
+## 구성 요소 간 관계 — 전체 아키텍처
+
+<MermaidDiagram chart={`flowchart TD
+    subgraph dataLayer["데이터 계층"]
+        DS[(원천 데이터소스\nDB, API, IoT)]
+    end
+    subgraph ontLayer["온톨로지 계층"]
+        OT["Object Type\n개체 정의"]
+        PR["Property\n속성 정의"]
+        LT["Link Type\n관계 정의"]
+        IF["Interface\n공통 형태"]
+        FN["Function\n비즈니스 로직"]
+        AT["Action Type\n변경 통제"]
+    end
+    subgraph consumeLayer["소비 계층"]
+        WS["Workshop\n대시보드"]
+        AIP["AIP 에이전트"]
+        OSDK["외부 애플리케이션"]
+    end
+
+    DS --> OT
+    OT --> PR
+    OT --> LT
+    OT -.->|구현| IF
+    OT --> FN
+    FN --> AT
+    OT --> AT
+
+    OT --> WS
+    FN --> WS
+    AT --> WS
+    FN --> AIP
+    AT --> AIP
+    OSDK --> OT
+    OSDK --> FN`} caption="Palantir 온톨로지 구성 요소 간 관계 — 데이터에서 소비까지" />
+
+---
+
+## 요약
+
+이번 세션에서는 하나의 불량 조사 시나리오를 따라가며 6가지 핵심 구성 요소를 만났다.
+
+- **Object Type**: 조사에 관련된 개체들(Machine, Lot, Defect...)을 정의하고, 실제 데이터소스와 직접 연결한다. OWL Class보다 구체적이고 운영 지향적이다
+- **Property**: 각 개체의 특성을 정의한다. 기본 타입 외에 미디어 참조, 시맨틱 검색, 시계열 등 현장에서 필요한 확장 타입을 제공한다
+- **Link Type**: 개체 간 관계를 데이터셋 조인으로 구현한다. 기존 DB를 건드리지 않고 온톨로지를 도입할 수 있게 하는 핵심이다
+- **Function**: "어떻게 판단할 것인가"의 도메인 로직을 한 곳에 정의한다. 대시보드, AI, 외부 앱이 모두 동일한 판단 기준을 사용한다
+- **Action Type**: 모든 변경을 사전 정의된 경로로 강제하여 거버넌스를 구조적으로 보장한다. OWL에 없는 Palantir의 핵심 독창성이다
+- **Interface**: 유사한 Object Type들을 공통 형태로 묶어 단일 쿼리로 처리할 수 있게 한다
+
+다음 회차에서는 이 구성 요소들이 학문적 온톨로지(OWL/RDF)와 어떻게 대응하는지 개념 재매핑을 학습한다.

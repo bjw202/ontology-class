@@ -12,6 +12,7 @@ export default {
   'phase-6': '6단계: 주요 표준 온톨로지',
   'phase-7': '7단계: 실전 적용',
   'phase-8': '8단계: 한계와 대안',
+  'phase-9': '9단계: 엔터프라이즈 온톨로지 -- Palantir',
   reference: '참고자료',
   about: '소개'
 }

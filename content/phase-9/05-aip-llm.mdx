@@ -1,0 +1,348 @@
+---
+title: AIP -- 온톨로지 위의 AI
+description: AIP Logic, Agent Studio, Graph RAG와의 비교를 통해 온톨로지 기반 AI를 이해합니다
+difficulty: advanced
+---
+
+# 9단계 5회차: AIP — 온톨로지 위에 올라탄 AI
+
+> "LLM은 세계에 대해 이야기할 수 있다. 온톨로지는 세계를 표현한다. 이 둘이 만나면 세계를 바꿀 수 있다."
+
+LLM(Large Language Model)은 놀라운 능력을 가지고 있습니다. 복잡한 질문을 이해하고, 다단계 추론을 수행하고, 자연어로 설명합니다. 하지만 한 가지 치명적인 한계가 있습니다. **LLM은 세계를 읽을 수 있지만 세계를 바꿀 수 없습니다.** 챗봇이 "M-14 설비의 위험도가 높다"고 말해도, 실제 정비 작업지시를 ERP에 생성하지는 못합니다.
+
+Palantir AIP(AI Platform)는 이 간극을 메웁니다. 온톨로지가 구조화된 세계 표현을 제공하고, Action 메커니즘이 실행 능력을 제공하고, LLM이 자연어 인터페이스와 다단계 판단을 제공합니다. 이 세 가지가 결합되면 **읽고, 이해하고, 실행하는** AI 시스템이 됩니다.
+
+이 회차는 AIP의 내부 작동 원리, tool 분류 체계, Agent Studio의 컨텍스트 구조, 그리고 일반 Graph RAG와의 근본적 차이를 다룹니다. 이 내용을 이해하면 "Palantir = Graph RAG"라는 단순화가 왜 절반만 맞는지 알 수 있습니다.
+
+## 학습 목표
+
+이 회차를 마치면 다음을 할 수 있습니다:
+
+1. **LLM 단독 한계 이해**: 온톨로지 없이 LLM만 있을 때 발생하는 구조적 한계를 설명한다
+2. **AIP Logic tool 분류 체계 설명**: data tools, logic tools, action tools 각각의 역할과 실행 주체를 설명한다
+3. **LLM과 tool의 관계 이해**: LLM이 tool을 직접 실행하지 않는 이유와 그것이 만드는 보안 효과를 설명한다
+4. **Agent Studio 컨텍스트 구조 파악**: 3가지 retrieval context 유형과 각각의 역할을 설명한다
+5. **Graph RAG vs Palantir 구분**: 두 접근법의 근본적 차이와 Palantir가 더 적합한 시나리오를 설명한다
+
+## 이번 세션 전체 그림
+
+<MermaidDiagram chart={`flowchart TD
+    U[사용자 자연어 질문] --> LLM[LLM 질문 해석]
+    LLM --> |tool 요청| AIP[AIP Logic 실행 엔진]
+    AIP --> |보안 정책 검사| SP[Security Policy]
+    SP --> DT[data tools\nOntology 객체 조회]
+    SP --> LT[logic tools\nFunction 실행]
+    SP --> ACT[action tools\nAction 실행]
+    DT --> |구조화 결과| CTX[컨텍스트 통합]
+    LT --> |계산 결과| CTX
+    ACT --> |실행 결과| CTX
+    DC[Document context\n비정형 문서] --> CTX
+    CTX --> LLM2[LLM 종합 판단 및 응답]
+    LLM2 --> U2[사용자에게 응답]
+    LLM2 --> |상태 변경| ONT[온톨로지 업데이트]`} caption="AIP 전체 동작 흐름 — 질문에서 실행까지" />
+
+## 1. LLM이 없을 때의 한계
+
+온톨로지만 있어도 객체 중심 운영은 가능합니다. Object Type, Link Type, Function으로 구조화된 세계를 표현하고, OSDK로 프로그래밍 방식으로 접근합니다. 하지만 여전히 네 가지 취약점이 있습니다:
+
+```
+1. 복잡한 질의를 자연어로 하기 어렵다
+   → OSDK나 SPARQL을 알아야만 질의 가능
+   → 도메인 전문가인 현장 관리자가 직접 접근 불가
+
+2. 문서/비정형 정보까지 함께 묻기 어렵다
+   → 엔지니어 메모, SOP, 작업 이력서가 온톨로지 밖에 있음
+   → 구조화 데이터와 비정형 데이터를 통합 분석 불가
+
+3. 다단계 판단 흐름을 직접 설계해야 한다
+   → "위험 설비 찾기 → 원인 분석 → 조치 추천" 같은 흐름을
+     개발자가 코드로 일일이 구현해야 함
+
+4. 운영 로직을 사람이 일일이 따라가야 한다
+   → 대시보드를 보고 판단하는 것은 여전히 사람의 몫
+```
+
+**결론:** 온톨로지는 구조를 주지만, **상호작용성과 유연한 해석 능력** 은 약합니다.
+
+> **왜 필요한가?** 구조화된 데이터만으로 충분하지 않은 이유는 무엇인가? 현실의 판단은 구조화된 수치 데이터와 비정형 맥락 정보를 동시에 요구합니다. "M-14 설비의 진동값이 높다"는 구조화 데이터이지만, "지난 주 교체한 공구가 규격 외 제품이었다"는 엔지니어 노트의 비정형 정보입니다. 이 두 가지를 통합한 판단이 진짜 운영 지능입니다.
+
+## 2. LLM이 온톨로지와 결합하면
+
+```
+LLM 없을 때: 사람이 직접 화면을 넘기며
+  → 객체 찾기 → 관계 탐색 → 계산 → 판단 → 조치
+
+LLM 결합 후: 사용자가 자연어로 질문
+  "지금 가장 위험한 설비 5개와 이유를 보여줘"
+
+  LLM이:
+    → 질문 해석
+    → 적절한 객체 쿼리 선택
+    → 관계 탐색
+    → Function 실행
+    → 결과 요약
+    → Action 제안 또는 실행
+```
+
+이 변화는 단순히 "더 편리한 인터페이스"가 아닙니다. **누가 온톨로지를 활용할 수 있는지를 바꿉니다.** 개발자, 데이터 과학자뿐만 아니라 현장 관리자, 임상 의사, 공급망 담당자까지 온톨로지의 힘을 직접 사용할 수 있게 됩니다.
+
+## 3. AIP Logic의 핵심 — tool 분류 체계
+
+AIP Logic의 tool은 세 가지 범주로 분류됩니다:
+
+### 3-1. data tools — 온톨로지 읽기
+
+```
+역할: Ontology 객체 조회, 관계 탐색, 검색
+예시:
+  - searchMachines(filter: {factoryId: "SUW", status: "active"})
+  - getMachine(id: "M-14").linkedSensors()
+  - searchLots(dateRange: "last_7_days", defectRate: ">0.05")
+```
+
+data tools는 온톨로지의 **읽기 경로** 를 사용합니다. Object Type 스키마와 Link Type을 따라 그래프를 탐색합니다. 보안 정책이 자동 적용되므로 에이전트가 접근할 수 없는 데이터는 쿼리 결과에 포함되지 않습니다.
+
+### 3-2. logic tools — Function 실행
+
+```
+역할: 온톨로지에 정의된 Function 호출, 계산
+예시:
+  - machine_quality_risk_score(machine_id: "M-14")
+  - tool_failure_likelihood(tool_id: "T-33")
+  - lot_sensitivity(recipe_id: "R-007", material_id: "MAT-112")
+```
+
+logic tools는 온톨로지에 **내장된 비즈니스 로직** 을 실행합니다. Function은 온톨로지 객체와 Link를 따라가며 계산합니다. LLM이 임의 코드를 실행하는 것이 아니라, 미리 정의되고 테스트된 비즈니스 로직만 실행합니다.
+
+### 3-3. action tools — 상태 변경
+
+```
+역할: Action 실행, 온톨로지 객체 상태 변경
+예시:
+  - createMaintenanceOrder(machineId: "M-14", priority: "high")
+  - requestToolReplacement(toolId: "T-33", approver: "shift_manager")
+  - isolateLot(lotId: "LOT-2024-0892", reason: "defect_investigation")
+```
+
+action tools는 온톨로지의 **쓰기 경로** 를 사용합니다. 유효성 검사, 권한 검사, 승인 워크플로우, 감사 로그가 모두 자동 처리됩니다.
+
+### 3-4. 결정적으로 중요한 원칙
+
+> **LLM은 tool에 직접 접근하지 않는다. LLM은 tool 사용을 "요청"하고, 실제 실행은 AIP Logic이 사용자의 권한 범위 내에서 수행한다.**
+
+이 구조가 만드는 세 가지 효과:
+
+1. **LLM에게 권한 없는 초능력을 주지 않는다** — 미리 허용된 query, function, action만 호출 가능
+2. **자연어와 운영 시스템 사이에 제어층이 생긴다** — 질문 → 해석 → tool 요청 → 정책 검증 → 실행
+3. **설명 가능성·감사 가능성이 높아진다** — 무슨 query, function, action을 했는지 추적 가능
+
+> **왜 필요한가?** LLM이 직접 tool을 실행하면 어떤 문제가 생기는가? 프롬프트 인젝션 공격으로 LLM이 허가되지 않은 Action을 실행할 수 있습니다. LLM의 환각(hallucination)이 잘못된 데이터 변경을 일으킬 수 있습니다. AIP Logic이 중간 실행 계층으로 존재하면 이 위험이 구조적으로 차단됩니다.
+
+## 4. Agent Studio의 컨텍스트 구조
+
+Agent Studio에서 LLM이 받는 retrieval context(검색 컨텍스트)는 매 사용자 메시지마다 세 가지를 포함합니다:
+
+```
+1. Ontology context    → 구조화된 객체/관계 정보
+2. Document context    → 보고서, 메모, SOP 같은 비정형 정보
+3. Function-backed context → 사용자 정의 검색, 혼합 검색, 특수 계산 결과
+```
+
+### 4-1. Ontology context
+
+Object Type과 Link Type에서 가져온 구조화된 데이터입니다. 실시간으로 동기화되므로 항상 현재 상태를 반영합니다.
+
+```
+예시:
+  Machine M-14:
+    status: "active"
+    vibration_last_24h: [1.8, 2.1, 2.3, 2.4]  ← 증가 추세
+    tool_wear_percentage: 87%  ← 임계치 근접
+    linked_lots: [LOT-0891, LOT-0892, LOT-0893]
+    linked_recipe: Recipe R-007 (high_tolerance)
+```
+
+### 4-2. Document context
+
+비정형 문서에서 벡터 검색으로 가져온 관련 정보입니다. 엔지니어 노트, 작업 지침서, 이상 알람 설명서, 이전 정비 보고서 등이 포함됩니다.
+
+```
+예시 (M-14 관련 엔지니어 노트):
+  "2024-11-15: 야간 2교대 중 진동 증가 감지.
+   Tool T-33이 지난 배치에서 공차 상한에 근접한 것을 확인."
+
+  "2024-11-20 SOP-VIBE-003: 진동값 2.0 초과 시
+   Tool 상태 즉시 확인 후 필요시 교체 권고"
+```
+
+### 4-3. Function-backed context
+
+온톨로지에 정의된 Function을 미리 실행해서 그 결과를 컨텍스트로 제공합니다. 복잡한 계산이나 특수 검색 결과를 LLM에게 전달합니다.
+
+```
+예시:
+  machine_quality_risk_score(M-14) = 87.3 (상위 5%)
+  similar_failure_cases(M-14) = [M-09 (2024-09), M-11 (2024-07)]
+  estimated_remaining_life(T-33) = 1.2 cycles
+```
+
+**팔란티어식 LLM 통합 = Vector RAG + Graph RAG + Tool Calling + Operational Actions를 한 판에 묶는 구조**
+
+> **왜 필요한가?** 왜 이 세 가지 컨텍스트가 모두 필요한가? 현실의 판단 과제는 세 가지를 모두 요구합니다. "이 설비가 왜 위험한가?"를 설명하려면 수치 데이터(Ontology context), 현장 맥락(Document context), 분석 결과(Function-backed context)가 모두 있어야 합니다. 하나라도 빠지면 판단의 품질이 떨어집니다.
+
+## 5. 온톨로지와 LLM의 시너지
+
+|  | 온톨로지가 LLM에 주는 것 | LLM이 온톨로지에 주는 것 |
+|---|---|---|
+| 구조 | 객체 중심 스키마, 관계 탐색 경로 | 자연어 인터페이스 |
+| 의미 | 도메인 의미, 보안 경계 | 문서+구조정보 통합 해석 |
+| 실행 | 실행 가능한 Action 표면 | 다단계 판단 흐름 자동화 |
+| 설명 | 감사 로그, 추적 가능성 | 설명 생성, 근거 제시 |
+
+> **온톨로지는 LLM에게 세계의 구조를 주고, LLM은 온톨로지에게 유연한 해석과 대화형 판단 인터페이스를 준다.**
+
+## 6. 제조 현장 완전 시나리오
+
+LLM + 온톨로지가 실제로 돌아가는 모습을 처음부터 끝까지 추적합니다.
+
+**사용자 질문:**
+> "오늘 야간조에서 품질 리스크가 가장 높은 설비 3대와, 당장 해야 할 조치를 알려줘."
+
+<MermaidDiagram chart={`sequenceDiagram
+    participant U as 현장 관리자
+    participant LLM as LLM 해석기
+    participant DT as data tools
+    participant LT as logic tools
+    participant DC as Document context
+    participant ACT as action tools
+    participant ONT as 온톨로지
+    U->>LLM: 야간조 품질 리스크 상위 설비 3개와 조치 알려줘
+    LLM->>DT: 야간조 가동 예정 Machine 목록 요청
+    DT->>ONT: 보안 정책 검사 후 객체 조회
+    ONT-->>DT: Machine 목록 및 센서 데이터
+    DT-->>LLM: 구조화 데이터 반환
+    LLM->>LT: machine_quality_risk_score 실행 요청
+    LT-->>LLM: 위험도 점수 반환
+    LLM->>DC: M-14 관련 엔지니어 노트 검색
+    DC-->>LLM: 관련 문서 컨텍스트
+    LLM->>LLM: 종합 판단 - 상위 3개 선정 및 이유 생성
+    LLM->>U: M-14, M-08, M-21 위험 이유 및 조치 제안
+    U->>LLM: M-14 조치 실행 요청
+    LLM->>ACT: createMaintenanceOrder M-14 요청
+    ACT->>ONT: Action 유효성 검사 후 실행
+    ONT-->>ACT: 작업지시 생성 완료 및 감사 로그
+    ACT-->>LLM: 실행 결과
+    LLM-->>U: 작업지시 생성 완료 확인`} caption="제조 현장 완전 시나리오 — 7단계 실행 흐름" />
+
+**Step 1. 질문 해석 (LLM)**
+
+LLM은 질문에서 핵심 정보를 추출합니다:
+- 시간 범위: 오늘 야간조
+- 대상 객체: 설비(Machine)
+- 판단 목표: 품질 리스크 순위
+- 출력 목표: 조치(Action recommendation)
+
+**Step 2. Ontology Query (data tools)**
+
+허용된 object query tool로 다음을 조회합니다:
+- 야간조에 가동 예정인 Machine 목록
+- 각 Machine의 최근 Lot 불량률
+- 센서 이상값 (진동, 온도)
+- Tool wear 상태
+- 최근 maintenance history
+
+LLM은 raw SQL을 직접 쓰는 대신 허용된 object query 도구를 통해 객체와 Link 중심으로 접근합니다.
+
+**Step 3. Function 실행 (logic tools)**
+
+```
+machine_quality_risk_score(machine_id)   → 종합 위험도 점수
+tool_failure_likelihood(tool_id)         → 공구 고장 가능성
+lot_sensitivity(recipe_id, material_id)  → 레시피/재료 품질 민감도
+```
+
+**Step 4. 문서 컨텍스트 결합**
+
+최근 엔지니어 메모, 작업 지침서, 특이 알람 설명 문서가 Document context로 추가됩니다. 단순 수치뿐만 아니라 "왜 이 기계가 위험한가"를 문장으로 설명할 수 있게 됩니다.
+
+**Step 5. LLM 종합 판단**
+
+```
+1위: Machine M-14
+  이유: 최근 48시간 vibration drift 증가, Tool T-33 wear 임계치 근접,
+        해당 레시피의 공차 민감도 높음
+
+2위: Machine M-08
+  이유: 동일 Lot family에서 edge burr 불량 재발
+
+3위: Machine M-21
+  이유: 작업자 변경 직후 setup offset 변동 이력
+```
+
+**Step 6. Action 제안 및 실행 (action tools)**
+
+```
+LLM이 제안하는 Action:
+  - M-14 사전 점검 작업지시 생성
+  - T-33 공구 교체 승인 요청
+  - M-08에 대해 첫 3개 Lot 100% 검사
+  - M-21 setup verification checklist 강제
+
+→ 자동 실행 또는 사용자 확인 후 실행 (설정에 따라)
+```
+
+**Step 7. 실행 결과가 다시 온톨로지에 반영**
+
+```
+작업지시 생성, 점검 상태 변경, 승인 여부, 결과 측정값이
+다시 객체 속성/링크에 반영된다.
+→ 다음 질문 때는 바뀐 세계 상태가 반영된다.
+```
+
+> **일반 챗봇은 답하고 끝난다. 운영형 Ontology + LLM 시스템은 답한 뒤 세계를 바꾼다.**
+
+## 7. Graph RAG vs. Palantir — 무엇이 다른가
+
+팔란티어를 단지 "Graph RAG 회사"로 보면 절반만 보는 것입니다.
+
+**일반 Graph RAG:**
+```
+질문 → 엔티티 추출 → 그래프 검색 → 관련 문맥 생성 → LLM 응답 생성
+```
+
+**팔란티어식 운영형 Ontology + LLM:**
+```
+질문 → 객체 검색 → 관계 탐색 → 함수 실행 → 답변 → 액션 제안/실행 → 상태 업데이트 → 감사 로그
+```
+
+| 특성 | Graph RAG | Palantir 온톨로지 + LLM |
+|---|---|---|
+| 목적 | 지식 검색 및 응답 생성 | 운영 실행 |
+| 쓰기 능력 | 없음 | Action을 통한 상태 변경 |
+| 거버넌스 | 없음 | 권한·감사·유효성 검사 내장 |
+| 실시간 데이터 | 제한적 | Object Storage 실시간 동기화 |
+| 비즈니스 로직 | 없음 | Function으로 온톨로지에 내장 |
+
+> 팔란티어의 본질은 **"지식 검색 시스템"이 아니라 "운영 실행 시스템"** 에 더 가깝다.
+
+> **연결 포인트 → Phase 7**: Phase 7에서 배운 Graph RAG의 기본 원리 — 엔티티와 관계 기반 그래프 검색 — 가 Palantir에서는 더 넓은 맥락에서 동작합니다. 검색뿐만 아니라 실행까지 이어지는 것이 핵심 차이입니다.
+
+> **왜 필요한가?** Graph RAG로 충분하지 않은가? Graph RAG는 "무슨 일이 일어나고 있는가"를 답할 수 있습니다. 하지만 "그래서 무엇을 해야 하는가"를 실행할 수 없습니다. 운영 시스템에서 AI의 가치는 답변을 생성하는 것이 아니라 올바른 결정을 올바른 방식으로 실행하는 것입니다.
+
+> **연결 포인트 → Phase 9 4회차**: 4회차에서 배운 보안 모델이 AIP에도 그대로 적용됩니다. 에이전트가 실행하는 data tools, logic tools, action tools 모두 온톨로지 계층의 Granular Policy 검사를 거칩니다.
+
+## 흔한 오해
+
+> **흔한 오해**: "AIP는 단순히 LLM에게 데이터베이스 접근 권한을 준 것이다"
+
+> **실제로는**: AIP의 핵심은 LLM이 데이터에 직접 접근하지 않는다는 것입니다. LLM은 tool 사용을 "요청"하고 AIP Logic이 보안 정책을 검사한 후 사용자의 권한 범위 내에서 실행합니다. LLM이 아무리 설득력 있게 "더 많은 데이터가 필요하다"고 주장해도, Granular Policy가 허용하지 않으면 접근할 수 없습니다. 이것이 단순한 데이터베이스 권한 부여와 근본적으로 다른 점입니다.
+
+## 요약
+
+- LLM 단독으로는 자연어 이해와 추론은 가능하지만 운영 시스템의 실시간 상태 접근과 상태 변경이 불가능
+- AIP Logic의 tool은 data(읽기), logic(계산), action(쓰기) 세 범주로 분류
+- LLM은 tool을 직접 실행하지 않고 요청만 함 — AIP Logic이 보안 정책 검사 후 실행
+- Agent Studio의 컨텍스트는 Ontology context + Document context + Function-backed context 세 가지 결합
+- 온톨로지는 LLM에게 세계의 구조와 실행 표면을 제공, LLM은 온톨로지에 자연어 인터페이스와 판단 능력을 제공
+- Graph RAG와의 근본 차이는 쓰기 능력 — Graph RAG는 검색, Palantir는 운영 실행
+- 전체 흐름: 질문 해석 → 객체 조회 → 함수 계산 → 문서 통합 → 종합 판단 → Action 실행 → 세계 상태 업데이트

@@ -1,0 +1,167 @@
+---
+title: 실습
+description: 팔란티어 온톨로지에 대한 이해도 확인과 심화 과제를 수행합니다
+difficulty: advanced
+---
+
+# 실습
+
+9단계에서 학습한 Palantir 운영형 온톨로지의 핵심 개념들을 이해도 확인 문제와 심화 과제를 통해 검증합니다. 개념 이해, 비교 분석, 적용 설계의 세 수준으로 구성되어 있습니다.
+
+## 이해도 확인 문제
+
+<CompetencyQuestion
+  question="Palantir 온톨로지에서 Action Type이 OWL 공리(Axiom)와 근본적으로 다른 이유는 무엇인가?"
+  options={[
+    "Action Type은 OWL처럼 논리적 추론을 지원하지 않기 때문이다",
+    "Action Type은 세계 상태를 변경하는 운영 개입 수단이며, 유효성 검사와 감사 로그를 포함하기 때문이다",
+    "Action Type은 RDF 트리플로 표현되지 않기 때문이다",
+    "Action Type은 LLM이 직접 실행할 수 있지만 OWL 공리는 그렇지 않기 때문이다"
+  ]}
+  answer={1}
+  explanation="OWL 공리는 지식 표현을 위한 논리적 제약으로, 세계를 '기술'합니다. Palantir Action Type은 세계를 '변경'하는 운영 개입 수단입니다. Action은 사전 유효성 검사(business rule enforcement), 실제 상태 변경, 감사 로그 자동 기록이라는 3단계 구조를 가지며, 이는 단순한 지식 표현을 넘어 거버넌스 메커니즘입니다."
+/>
+
+<CompetencyQuestion
+  question="LLM이 AIP Logic에서 tool을 '직접 실행'하지 않고 '요청'만 하는 구조의 핵심 이점은?"
+  options={[
+    "LLM의 응답 속도를 높이기 위해서이다",
+    "LLM이 더 복잡한 추론을 할 수 있도록 컨텍스트를 제한하기 위해서이다",
+    "미리 허용된 query/function/action만 실행 가능하고, 사용자 권한 범위 내에서 제어되며, 실행 추적이 가능하기 때문이다",
+    "LLM이 온톨로지 스키마를 직접 수정하지 못하도록 막기 위해서이다"
+  ]}
+  answer={2}
+  explanation="LLM이 tool을 '요청'하고 AIP Logic이 실제 실행하는 구조는 세 가지 효과를 만듭니다: (1) 권한 없는 초능력 방지 — 미리 허용된 도구만 호출 가능, (2) 자연어와 운영 시스템 사이 제어층 생성 — 질문→해석→tool 요청→정책 검증→실행, (3) 설명 가능성·감사 가능성 향상 — 무슨 query, function, action을 했는지 추적 가능. 이는 운영 안전성의 핵심 메커니즘입니다."
+/>
+
+<CompetencyQuestion
+  question="Palantir 운영형 온톨로지가 'Graph RAG 이상'인 이유를 가장 잘 설명하는 것은?"
+  options={[
+    "더 많은 데이터를 저장할 수 있기 때문이다",
+    "Graph RAG보다 빠른 검색 성능을 제공하기 때문이다",
+    "쓰기 능력(Action을 통한 상태 변경), 거버넌스(권한·감사), 비즈니스 로직(Function) 내장으로 단순 검색 시스템을 넘어 운영 실행 시스템이기 때문이다",
+    "자연어 쿼리를 더 잘 이해하기 때문이다"
+  ]}
+  answer={2}
+  explanation="일반 Graph RAG는 질문→엔티티 추출→그래프 검색→문맥 생성→LLM 응답 생성의 단방향 파이프라인입니다. Palantir 운영형 온톨로지는 질문→객체 검색→관계 탐색→함수 실행→답변→액션 제안/실행→상태 업데이트→감사 로그의 닫힌 루프입니다. 쓰기 능력, 거버넌스, 실시간 데이터, 비즈니스 로직이 추가되면서 '지식 검색 시스템'이 아닌 '운영 실행 시스템'이 됩니다."
+/>
+
+<CompetencyQuestion
+  question="OWL DL Reasoner가 AIP(LLM 기반)보다 더 적합한 상황은?"
+  options={[
+    "자연어로 복잡한 질문을 처리해야 할 때",
+    "의약품 상호작용 검증처럼 논리적 일관성이 생사와 연결되거나, 다른 조직의 온톨로지와 직접 연결이 필요할 때",
+    "실시간 데이터를 빠르게 처리해야 할 때",
+    "비개발자가 쉽게 사용해야 하는 시스템을 만들 때"
+  ]}
+  answer={1}
+  explanation="OWL DL Reasoner는 형식적 논리 기반으로 모순을 자동 탐지하므로, 논리적 일관성이 생사와 연결되는 경우(의약품 상호작용, 항공기 시스템 인증)에 적합합니다. 또한 RDF Linked Data와 OWL/SPARQL 표준을 통해 기관 간 온톨로지 직접 연결이 필요한 학술/정부 데이터 연계에도 OWL이 유리합니다. AIP는 유연한 해석과 대화형 인터페이스에 강하지만, 형식 논리적 일관성 보장에는 약합니다."
+/>
+
+## 심화 과제
+
+<Exercise
+  title="Python Action 패턴 구현"
+  difficulty="advanced"
+  duration="2~3일"
+>
+FastAPI + Pydantic으로 Palantir Action Type의 핵심 개념을 OSS 스택으로 재현합니다.
+
+**출발점:** 6회차에서 소개한 `EscalateDefectAction` 코드 예시를 기반으로 다음을 추가 구현하세요.
+
+**구현 요구사항:**
+
+1. **유효성 검사 강화**: 유효성 검사 실패 시 구체적 오류 메시지 반환 (어떤 필드가, 왜, 어떻게 실패했는지)
+
+2. **감사 로그 영속성**: 감사 로그를 SQLite 또는 PostgreSQL에 저장
+   - 로그 항목: action_type, actor_id, target_id, timestamp, parameters, result
+   - 조회 API: 특정 객체에 대한 모든 Action 이력 조회
+
+3. **승인 워크플로우**: `critical` severity일 때 2단계 승인 구현
+   - 1차 승인자: 직속 상관 (manager_id)
+   - 2차 승인자: 안전 담당자 (safety_officer_id)
+   - 승인 대기 중 상태 관리
+
+4. **비동기 부수 효과**: Action 실행 후 이메일 또는 Slack 알림 발송 (실제 발송 불필요, mock 구현 가능)
+
+**평가 기준:**
+- Action 실행 시 감사 로그가 자동 기록되는가
+- 권한 없는 Action 시도 시 거부되는가
+- critical severity 시 2단계 승인 흐름이 올바른가
+</Exercise>
+
+<Exercise
+  title="도메인 온톨로지 OWL vs Palantir 패턴 비교"
+  difficulty="advanced"
+  duration="3~5일"
+>
+자신의 업무 도메인에서 동일한 Competency Question 5개를 두 가지 방식으로 구현하고 비교 보고서를 작성합니다.
+
+**구현 대상:**
+
+**OWL 버전:**
+- Protégé로 온톨로지 설계
+- SPARQL로 Competency Question 5개 답하기
+- HermiT 추론기로 일관성 검사
+
+**Palantir 패턴 버전 (OSS 스택):**
+- Pydantic 모델로 Object Type 정의
+- SQLAlchemy로 Link Type 및 관계 구현
+- FastAPI로 Action Type 구현 (유효성 검사 + 감사 로그)
+
+**비교 보고서 항목:**
+- 구현 코드 양 비교 (라인 수, 복잡도)
+- 추론 능력 차이 (OWL Reasoner vs. Function 기반 계산)
+- 거버넌스 구현 용이성 (접근 제어, 감사 로그)
+- 확장성 (새로운 도메인 개념 추가 시)
+- 어떤 상황에서 어느 방식이 더 적합한가
+
+**도메인 선택 예시:** 레이저 공정 품질 관리, 병원 수술 일정 관리, 물류 창고 재고 관리 등
+</Exercise>
+
+<Exercise
+  title="Mini-AIP 아키텍처 설계 및 구현"
+  difficulty="advanced"
+  duration="5~7일"
+>
+Python + LangGraph + FastAPI로 Palantir AIP의 핵심 개념을 구현합니다.
+
+**구현 대상:**
+
+1. **OntologyManager**: Object Type 스키마 등록 및 관리
+   - Object Type 정의 (이름, 속성, 유효성 규칙)
+   - Link Type 정의 (source, target, cardinality)
+   - 스키마 버전 관리 (experimental → active → deprecated)
+
+2. **ActionExecutor**: Action Type 정의 + 유효성 검사 + 감사 로그
+   - Action 등록: 이름, 파라미터 스키마, 유효성 규칙, 권한 요구사항
+   - Action 실행: 검증 → 실행 → 로그 → 결과 반환
+   - Human-in-the-loop 옵션 (고위험 Action 시 사람 승인 요구)
+
+3. **OntologyAgent** (LangGraph 기반):
+   - data tool: 온톨로지 객체 쿼리 도구
+   - logic tool: Function 실행 도구
+   - action tool: Action 실행 요청 도구 (실제 실행은 ActionExecutor가 담당)
+
+4. **SimpleOSDK**: Python 클라이언트 자동 생성
+   - 등록된 Object Type에 대한 Pydantic 모델 자동 생성
+   - 타입 안전한 쿼리 인터페이스
+
+**평가 기준:**
+- 에이전트가 자연어로 "고장 설비 리스트"를 조회할 수 있는가
+- Action 실행 시 감사 로그가 자동 기록되는가
+- 권한 없는 Action 시도 시 거부되는가
+- 실행 결과가 다음 쿼리에 반영되는가 (닫힌 루프)
+</Exercise>
+
+## 다음 단계
+
+이 단계의 실습을 마치면 다음을 권장합니다:
+
+1. **과제 1 완료 후**: 구현한 Action 패턴을 실제 업무 도메인 데이터로 확장해보세요. 결정 카탈로그를 작성하고 중요 결정 1개를 선택해 PoC를 구현합니다.
+
+2. **과제 2 완료 후**: 비교 보고서를 바탕으로 자신의 도메인에 가장 적합한 접근 방식을 결정하세요. 표준 온톨로지(Phase 6)와 운영 온톨로지의 결합을 탐색해보세요.
+
+3. **과제 3 완료 후**: Mini-AIP에 실제 데이터를 연결하고 자연어 인터페이스로 운영 질문에 답하는 시스템을 완성합니다. LangGraph의 human-in-the-loop 기능과 AIP Logic의 권한 모델을 깊이 비교해보세요.
+
+9단계 전체 학습을 마친 후에는 **참고자료** 섹션의 Palantir 공식 문서, OWL/RDF 비교 자료, OSS 구현 가이드를 참조하여 학습을 심화하세요.
