@@ -8,12 +8,13 @@ interface MermaidDiagramProps {
 }
 
 let idCounter = 0
+let mermaidInitialized = false
 
 export function MermaidDiagram({ chart, caption }: MermaidDiagramProps) {
   const [svg, setSvg] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const idRef = useRef<string>(`mermaid-${++idCounter}`)
+  const idRef = useRef<string>(`mermaid-diagram-${++idCounter}`)
 
   useEffect(() => {
     let cancelled = false
@@ -24,15 +25,22 @@ export function MermaidDiagram({ chart, caption }: MermaidDiagramProps) {
         setError(null)
 
         const mermaid = (await import('mermaid')).default
-        const isDark = document.documentElement.classList.contains('dark')
 
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: isDark ? 'dark' : 'default',
-          securityLevel: 'loose',
-        })
+        if (!mermaidInitialized) {
+          const isDark = document.documentElement.classList.contains('dark')
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: isDark ? 'dark' : 'default',
+            securityLevel: 'loose',
+          })
+          mermaidInitialized = true
+        }
 
-        // Validate syntax before rendering to prevent error SVG injection
+        // Clean up any existing element with this ID before rendering
+        const existing = document.getElementById(idRef.current)
+        if (existing) existing.remove()
+
+        // Validate syntax before rendering
         await mermaid.parse(chart)
 
         const { svg: renderedSvg } = await mermaid.render(idRef.current, chart)
@@ -51,12 +59,10 @@ export function MermaidDiagram({ chart, caption }: MermaidDiagramProps) {
           const errorElements = document.querySelectorAll(`#d${idRef.current}, [id^="d${idRef.current}"]`)
           errorElements.forEach(el => el.remove())
           // Also clean up orphaned mermaid error containers
-          document.querySelectorAll('svg[id*="mermaid"] + style').forEach(el => {
-            const prev = el.previousElementSibling
-            if (prev && prev.getAttribute('aria-roledescription') === 'error') {
-              prev.remove()
-              el.remove()
-            }
+          document.querySelectorAll('svg[aria-roledescription="error"]').forEach(el => {
+            const next = el.nextElementSibling
+            el.remove()
+            if (next && next.tagName === 'STYLE') next.remove()
           })
         }
       }
