@@ -4,12 +4,26 @@
     "context7": {
       "$comment": "Up-to-date documentation and code examples via Context7",
       "command": "/bin/bash",
-      "args": ["-l", "-c", "exec npx -y @upstash/context7-mcp@latest"]
+      "args": [
+        "-l",
+        "-c",
+        "exec npx -y @upstash/context7-mcp@latest"
+      ]
     },
     "sequential-thinking": {
       "$comment": "Step-by-step reasoning for complex problems",
       "command": "/bin/bash",
-      "args": ["-l", "-c", "exec npx -y @modelcontextprotocol/server-sequential-thinking"]
+      "args": [
+        "-l",
+        "-c",
+        "exec npx -y @modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "octo-browser": {
+      "command": "node",
+      "args": [
+        "/Users/byunjungwon/.config/octo/mcp-browser-server.js"
+      ]
     }
   },
   "staggeredStartup": {

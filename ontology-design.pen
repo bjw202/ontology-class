@@ -1,0 +1,1673 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Zv8j0",
+      "x": 0,
+      "y": 0,
+      "name": "Screen 1 - Full Page Layout",
+      "width": 1200,
+      "height": 900,
+      "fill": "#F8F9FC",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "vyUTv",
+          "x": 0,
+          "y": 0,
+          "name": "Navbar",
+          "width": 1200,
+          "height": 56,
+          "fill": "#FFFFFF",
+          "padding": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "q3olq",
+              "name": "Logo Area",
+              "width": 260,
+              "height": 40,
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 6,
+                  "id": "eqgW1",
+                  "name": "navLogoIcon",
+                  "fill": "#3498db",
+                  "width": 28,
+                  "height": 28
+                },
+                {
+                  "type": "text",
+                  "id": "WCnu6",
+                  "name": "navLogoText",
+                  "fill": "#1E293B",
+                  "content": "온톨로지 기초 학습",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rKrHO",
+              "name": "navSpacer",
+              "width": "fill_container",
+              "height": 40
+            },
+            {
+              "type": "frame",
+              "id": "gHsQ3",
+              "name": "navSearch",
+              "width": 200,
+              "height": 36,
+              "fill": "#F1F5F9",
+              "cornerRadius": 8,
+              "gap": 6,
+              "padding": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Z4juo",
+                  "name": "navSearchIcon",
+                  "content": "🔍",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "dTZcj",
+                  "name": "navSearchText",
+                  "fill": "#94A3B8",
+                  "content": "검색...",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 16,
+              "id": "QevTH",
+              "name": "navUser",
+              "fill": "#3498db",
+              "width": 32,
+              "height": 32
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cafm4",
+          "x": 0,
+          "y": 56,
+          "name": "Sidebar",
+          "width": 260,
+          "height": 844,
+          "fill": "#FFFFFF",
+          "layout": "vertical",
+          "gap": 4,
+          "padding": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "3bi1m",
+              "name": "sidebarTitle",
+              "fill": "#94A3B8",
+              "content": "강의 목록",
+              "fontFamily": "Inter",
+              "fontSize": 11,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "m2zHg",
+              "name": "NavItem1",
+              "width": "fill_container",
+              "height": 40,
+              "fill": "#EBF4FD",
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": 10,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "UqZ8I",
+                  "name": "sidebarItem1Icon",
+                  "fill": "#3498db",
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "text",
+                  "id": "fLeHZ",
+                  "name": "sidebarItem1Text",
+                  "fill": "#3498db",
+                  "content": "1. 온톨로지 소개",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LSnWO",
+              "name": "NavItem2",
+              "width": "fill_container",
+              "height": 40,
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": 10,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "1MaJB",
+                  "name": "sidebarItem2Icon",
+                  "fill": "#94A3B8",
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "text",
+                  "id": "UAN5b",
+                  "name": "sidebarItem2Text",
+                  "fill": "#64748B",
+                  "content": "2. RDF 기초",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "arz4N",
+              "name": "NavItem3",
+              "width": "fill_container",
+              "height": 40,
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": 10,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "iW9yt",
+                  "name": "sidebarItem3Icon",
+                  "fill": "#94A3B8",
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "text",
+                  "id": "6eawv",
+                  "name": "sidebarItem3Text",
+                  "fill": "#64748B",
+                  "content": "3. OWL 기초",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Jnndu",
+              "name": "NavItem4",
+              "width": "fill_container",
+              "height": 40,
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": 10,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "pXFSp",
+                  "name": "sidebarItem4Icon",
+                  "fill": "#94A3B8",
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "text",
+                  "id": "xV948",
+                  "name": "sidebarItem4Text",
+                  "fill": "#64748B",
+                  "content": "4. SPARQL 쿼리",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "V8pLP",
+              "name": "NavItem5",
+              "width": "fill_container",
+              "height": 40,
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": 10,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "fwQM0",
+                  "name": "sidebarItem5Icon",
+                  "fill": "#94A3B8",
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "text",
+                  "id": "CcJ76",
+                  "name": "sidebarItem5Text",
+                  "fill": "#64748B",
+                  "content": "5. 연습 문제",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "nhGN9",
+              "name": "sidebarDivider",
+              "fill": "#F1F5F9",
+              "width": "fill_container",
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "5gRdB",
+              "name": "sidebarProgressTitle",
+              "fill": "#94A3B8",
+              "content": "학습 진도",
+              "fontFamily": "Inter",
+              "fontSize": 11,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "xFMmt",
+              "name": "ProgressBar",
+              "width": "fill_container",
+              "height": 8,
+              "fill": "#E5E7EB",
+              "cornerRadius": 4,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "FSx76",
+                  "name": "sidebarProgressFill",
+                  "fill": "#3498db",
+                  "width": 136,
+                  "height": 8
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "jm5b0",
+              "name": "sidebarProgressText",
+              "fill": "#64748B",
+              "content": "3/5 완료 (60%)",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "IHeV2",
+          "x": 260,
+          "y": 56,
+          "name": "Main Content",
+          "width": 940,
+          "height": 844,
+          "fill": "#F8F9FC",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "OD2xR",
+              "name": "Breadcrumb",
+              "width": "fill_container",
+              "height": 20,
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "glnDC",
+                  "name": "breadcrumb1",
+                  "fill": "#94A3B8",
+                  "content": "홈",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "7wuer",
+                  "name": "breadcrumb2",
+                  "fill": "#CBD5E1",
+                  "content": ">",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "NzXZJ",
+                  "name": "breadcrumb3",
+                  "fill": "#94A3B8",
+                  "content": "1단계: 기초 개념",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "5q66a",
+                  "name": "breadcrumb4",
+                  "fill": "#CBD5E1",
+                  "content": ">",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "niBzl",
+                  "name": "breadcrumb5",
+                  "fill": "#3498db",
+                  "content": "온톨로지 소개",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "FlbzM",
+              "name": "pageTitle",
+              "fill": "#1E293B",
+              "content": "온톨로지란 무엇인가?",
+              "fontFamily": "Inter",
+              "fontSize": 26,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "vOcVa",
+              "name": "pageSubtitle",
+              "fill": "#64748B",
+              "content": "지식 표현과 공유를 위한 온톨로지의 기본 개념을 학습합니다.",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "WRW7K",
+              "name": "ConceptCard - Default Blue",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kNP6x",
+                  "name": "Badge Row",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "whoyk",
+                      "name": "cardBlueBadgePill",
+                      "fill": "#EBF4FD",
+                      "cornerRadius": 20,
+                      "gap": 4,
+                      "padding": 5,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "GlyEi",
+                          "name": "cardBlueBadgeText",
+                          "fill": "#3498db",
+                          "content": "핵심 개념",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "1Ydbk",
+                  "name": "cardBlueTitle",
+                  "fill": "#1E293B",
+                  "content": "온톨로지의 정의",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "lYjNt",
+                  "name": "cardBlueDesc",
+                  "fill": "#475569",
+                  "content": "온톨로지(Ontology)는 특정 도메인의 개념과 개념들 사이의 관계를 형식적으로 표현한 명세서입니다. 철학에서 유래한 용어로, 컴퓨터 과학에서는 지식을 구조화하고 공유하기 위한 도구로 사용됩니다.",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "cEq0e",
+                  "name": "Card Footer",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "O4S3o",
+                      "name": "cardBlueFooterText",
+                      "fill": "#94A3B8",
+                      "content": "Gruber (1993) 정의 참조",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7ZSyG",
+                      "name": "cardBlueSpacer",
+                      "width": "fill_container",
+                      "height": 20
+                    },
+                    {
+                      "type": "text",
+                      "id": "oIr8x",
+                      "name": "cardBlueLink",
+                      "fill": "#3498db",
+                      "content": "더 알아보기 →",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MHrvF",
+              "name": "ConceptCard - Highlight Green",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "U1FII",
+                  "name": "cardGreenAccentBar",
+                  "fill": "#2ecc71",
+                  "width": "fill_container",
+                  "height": 4
+                },
+                {
+                  "type": "frame",
+                  "id": "rClxQ",
+                  "name": "cardGreenBadge",
+                  "fill": "#D4EDDA",
+                  "cornerRadius": 20,
+                  "gap": 4,
+                  "padding": 5,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TF3YZ",
+                      "name": "cardGreenBadgeText",
+                      "fill": "#1a7a40",
+                      "content": "주요 특징",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "OVNg3",
+                  "name": "cardGreenTitle",
+                  "fill": "#1E293B",
+                  "content": "온톨로지의 구성 요소",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "QVsTv",
+                  "name": "cardGreenDesc",
+                  "fill": "#475569",
+                  "content": "온톨로지는 클래스(Class), 속성(Property), 인스턴스(Instance), 그리고 이들 사이의 관계(Relation)로 구성됩니다. 각 요소는 도메인 지식을 체계적으로 표현하는 역할을 합니다.",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "dLguP",
+                  "name": "Feature List",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9pm2N",
+                      "name": "cardGreenItem1",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 3,
+                          "id": "Fq2P6",
+                          "name": "cardGreenDot1",
+                          "fill": "#2ecc71",
+                          "width": 6,
+                          "height": 6
+                        },
+                        {
+                          "type": "text",
+                          "id": "avjvW",
+                          "name": "cardGreenText1",
+                          "fill": "#475569",
+                          "content": "클래스(Class): 개념의 집합",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RtiVd",
+                      "name": "cardGreenItem2",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 3,
+                          "id": "jenZA",
+                          "name": "cardGreenDot2",
+                          "fill": "#2ecc71",
+                          "width": 6,
+                          "height": 6
+                        },
+                        {
+                          "type": "text",
+                          "id": "92InK",
+                          "name": "cardGreenText2",
+                          "fill": "#475569",
+                          "content": "속성(Property): 개념 간 관계",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WkrB9",
+              "name": "Exercise - Basic",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "R9Kel",
+                  "name": "Exercise Header",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "p9rqn",
+                      "name": "exBadge",
+                      "fill": "#D4EDDA",
+                      "cornerRadius": 20,
+                      "gap": 4,
+                      "padding": 5,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "RDMMp",
+                          "name": "exBadgeText",
+                          "fill": "#1a7a40",
+                          "content": "기본 실습",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zLxkF",
+                      "name": "exSpacer",
+                      "width": "fill_container",
+                      "height": 20
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RSbji",
+                      "name": "exDiffBadge",
+                      "fill": "#F1F5F9",
+                      "cornerRadius": 6,
+                      "padding": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "aOLL5",
+                          "name": "exDiffText",
+                          "fill": "#64748B",
+                          "content": "쉬움",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "7gUPB",
+                  "name": "exTitle",
+                  "fill": "#1E293B",
+                  "content": "실습 1: 온톨로지 개념 분류하기",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "C1h1E",
+                  "name": "exDesc",
+                  "fill": "#475569",
+                  "content": "다음 용어들을 온톨로지의 구성 요소(클래스, 속성, 인스턴스)로 분류하세요: 사람, hasAge, 홍길동, 자동차, hasColor, 빨강",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "g9yb9",
+                  "name": "Toggle Button",
+                  "width": 160,
+                  "fill": "#F8FFF9",
+                  "cornerRadius": 8,
+                  "gap": 6,
+                  "padding": 10,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TZ5pn",
+                      "name": "exToggleText",
+                      "fill": "#2ecc71",
+                      "content": "정답 보기",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "fITKY",
+      "x": 1280,
+      "y": 0,
+      "name": "Screen 2 - Component Sheet",
+      "width": 1200,
+      "height": 1400,
+      "fill": "#F8F9FC",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": 40,
+      "children": [
+        {
+          "type": "frame",
+          "id": "IZjhp",
+          "name": "Sheet Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "7VuEn",
+              "name": "s2Title",
+              "fill": "#1E293B",
+              "content": "컴포넌트 시트",
+              "fontFamily": "Inter",
+              "fontSize": 28,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "aQy2z",
+              "name": "s2Subtitle",
+              "fill": "#64748B",
+              "content": "온톨로지 기초 학습 사이트의 UI 컴포넌트 가이드",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "tHjal",
+          "name": "s2Divider",
+          "fill": "#E2E8F0",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "text",
+          "id": "YYqB4",
+          "name": "s2SectionLabel1",
+          "fill": "#94A3B8",
+          "content": "개념 카드 (ConceptCard)",
+          "fontFamily": "Inter",
+          "fontSize": 12,
+          "fontWeight": "700"
+        },
+        {
+          "type": "frame",
+          "id": "X9QP1",
+          "name": "Card Row",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "DDJlq",
+              "name": "ConceptCard Default",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "0BUxD",
+                  "name": "cc1Badge",
+                  "fill": "#EBF4FD",
+                  "cornerRadius": 20,
+                  "gap": 4,
+                  "padding": 5,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "6HQl2",
+                      "name": "cc1BadgeText",
+                      "fill": "#3498db",
+                      "content": "기본",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "4lWu5",
+                  "name": "cc1Title",
+                  "fill": "#1E293B",
+                  "content": "온톨로지 기본 개념",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "fp7BG",
+                  "name": "cc1Desc",
+                  "fill": "#475569",
+                  "content": "온톨로지는 지식을 형식적으로 표현한 명세서로, 개념과 관계를 정의합니다.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "AAtko",
+                  "name": "cc1VariantLabel",
+                  "fill": "#3498db",
+                  "content": "Variant: default (blue)",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LXWtv",
+              "name": "ConceptCard Highlight",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "TjBYj",
+                  "name": "cc2AccentBar",
+                  "fill": "#2ecc71",
+                  "width": "fill_container",
+                  "height": 3
+                },
+                {
+                  "type": "frame",
+                  "id": "H6EZ3",
+                  "name": "cc2Badge",
+                  "fill": "#D4EDDA",
+                  "cornerRadius": 20,
+                  "gap": 4,
+                  "padding": 5,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "niwYK",
+                      "name": "cc2BadgeText",
+                      "fill": "#1a7a40",
+                      "content": "강조",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "aIW5J",
+                  "name": "cc2Title",
+                  "fill": "#1E293B",
+                  "content": "핵심 학습 포인트",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "VTOVL",
+                  "name": "cc2Desc",
+                  "fill": "#475569",
+                  "content": "RDF Triple은 주어(Subject), 서술어(Predicate), 목적어(Object)로 구성되며 지식 표현의 기본 단위입니다.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "IClHy",
+                  "name": "cc2VariantLabel",
+                  "fill": "#2ecc71",
+                  "content": "Variant: highlight (green)",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kg2Uk",
+              "name": "ConceptCard Warning",
+              "width": "fill_container",
+              "fill": "#FFFBF5",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "uLR18",
+                  "name": "cc3AccentBar",
+                  "fill": "#e67e22",
+                  "width": "fill_container",
+                  "height": 3
+                },
+                {
+                  "type": "frame",
+                  "id": "wBpcU",
+                  "name": "cc3Badge",
+                  "fill": "#FEF3C7",
+                  "cornerRadius": 20,
+                  "gap": 4,
+                  "padding": 5,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "mPZzk",
+                      "name": "cc3BadgeText",
+                      "fill": "#b45309",
+                      "content": "주의",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "8z8uG",
+                  "name": "cc3Title",
+                  "fill": "#1E293B",
+                  "content": "흔한 오해",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "kb6ZX",
+                  "name": "cc3Desc",
+                  "fill": "#475569",
+                  "content": "온톨로지와 데이터베이스 스키마는 다릅니다. 온톨로지는 추론 가능한 의미론적 구조를 제공하지만, DB 스키마는 데이터 저장 구조만 정의합니다.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Bmx5A",
+                  "name": "cc3VariantLabel",
+                  "fill": "#e67e22",
+                  "content": "Variant: warning (orange)",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "k69zu",
+          "name": "s2SectionLabel2",
+          "fill": "#94A3B8",
+          "content": "실습 카드 (Exercise)",
+          "fontFamily": "Inter",
+          "fontSize": 12,
+          "fontWeight": "700"
+        },
+        {
+          "type": "frame",
+          "id": "QZh9H",
+          "name": "Exercise Row",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "hk4bg",
+              "name": "Exercise Basic",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XXvZv",
+                  "name": "ex1Header",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RBxKh",
+                      "name": "ex1Badge",
+                      "fill": "#D4EDDA",
+                      "cornerRadius": 20,
+                      "gap": 4,
+                      "padding": 5,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "z9rkz",
+                          "name": "ex1BadgeText",
+                          "fill": "#1a7a40",
+                          "content": "기본 실습",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "10YGv",
+                      "name": "ex1Space",
+                      "width": "fill_container",
+                      "height": 20
+                    },
+                    {
+                      "type": "frame",
+                      "id": "P1RYt",
+                      "name": "ex1Diff",
+                      "fill": "#F0FDF4",
+                      "cornerRadius": 6,
+                      "padding": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g8TrV",
+                          "name": "ex1DiffText",
+                          "fill": "#1a7a40",
+                          "content": "쉬움",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "FDEIv",
+                  "name": "ex1Title",
+                  "fill": "#1E293B",
+                  "content": "실습: RDF 트리플 작성",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "7yOea",
+                  "name": "ex1Desc",
+                  "fill": "#475569",
+                  "content": "주어진 정보를 RDF 트리플 형태로 작성하세요: 홍길동은 25세이고 서울에 삽니다.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "7bd6q",
+                  "name": "ex1Btn",
+                  "width": 140,
+                  "fill": "#F0FDF4",
+                  "cornerRadius": 8,
+                  "gap": 4,
+                  "padding": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ICFDc",
+                      "name": "ex1BtnText",
+                      "fill": "#2ecc71",
+                      "content": "정답 보기",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "5ecXf",
+              "name": "Exercise Challenge",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 10,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "tQ5DA",
+                  "name": "ex2Header",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "U6gav",
+                      "name": "ex2Badge",
+                      "fill": "#FED7AA",
+                      "cornerRadius": 20,
+                      "gap": 4,
+                      "padding": 5,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "41usq",
+                          "name": "ex2BadgeText",
+                          "fill": "#c2410c",
+                          "content": "도전 실습",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7B9uU",
+                      "name": "ex2Space",
+                      "width": "fill_container",
+                      "height": 20
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NZfg2",
+                      "name": "ex2Diff",
+                      "fill": "#FFF7ED",
+                      "cornerRadius": 6,
+                      "padding": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jyrzZ",
+                          "name": "ex2DiffText",
+                          "fill": "#c2410c",
+                          "content": "어려움",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "cGALz",
+                  "name": "ex2Title",
+                  "fill": "#1E293B",
+                  "content": "도전: OWL 클래스 계층 설계",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "eybtf",
+                  "name": "ex2Desc",
+                  "fill": "#475569",
+                  "content": "동물원 온톨로지를 설계하세요. 동물, 포유류, 조류, 어류의 계층 구조를 OWL 형식으로 표현하고 각 클래스의 속성을 정의하세요.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "pKsQO",
+                  "name": "ex2Hint",
+                  "width": "fill_container",
+                  "fill": "#FFF7ED",
+                  "cornerRadius": 8,
+                  "gap": 4,
+                  "padding": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XfYsU",
+                      "name": "ex2HintText",
+                      "fill": "#c2410c",
+                      "content": "힌트: rdfs:subClassOf 속성을 활용하세요",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CpOWO",
+                  "name": "ex2Btn",
+                  "width": 140,
+                  "fill": "#FFF7ED",
+                  "cornerRadius": 8,
+                  "gap": 4,
+                  "padding": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "M80D8",
+                      "name": "ex2BtnText",
+                      "fill": "#e67e22",
+                      "content": "정답 숨기기",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "QMVeq",
+          "name": "s2SectionLabel3",
+          "fill": "#94A3B8",
+          "content": "역량 퀴즈 (CompetencyQuestion)",
+          "fontFamily": "Inter",
+          "fontSize": 12,
+          "fontWeight": "700"
+        },
+        {
+          "type": "frame",
+          "id": "rvb25",
+          "name": "CompetencyQuestion",
+          "width": "fill_container",
+          "fill": "#FFFFFF",
+          "cornerRadius": 10,
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ssCpB",
+              "name": "Quiz Header",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "oBTvm",
+                  "name": "quizBadge",
+                  "fill": "#F3E8FF",
+                  "cornerRadius": 20,
+                  "gap": 4,
+                  "padding": 5,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "7eMpC",
+                      "name": "quizBadgeText",
+                      "fill": "#9b59b6",
+                      "content": "역량 퀴즈",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CrMXb",
+                  "name": "quizHeaderSpace",
+                  "width": "fill_container",
+                  "height": 20
+                },
+                {
+                  "type": "text",
+                  "id": "qYJNO",
+                  "name": "quizNum",
+                  "fill": "#94A3B8",
+                  "content": "Q1 / 5",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "lwZUS",
+              "name": "quizQuestion",
+              "fill": "#1E293B",
+              "content": "다음 중 온톨로지에서 클래스(Class)의 특징으로 올바른 것은?",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "Lc9tm",
+              "name": "Options Grid",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "b2c0c",
+                  "name": "Option A - Correct",
+                  "width": "fill_container",
+                  "fill": "#F3E8FF",
+                  "cornerRadius": 8,
+                  "gap": 12,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "0aWs6",
+                      "name": "optALabel",
+                      "width": 28,
+                      "height": 28,
+                      "fill": "#9b59b6",
+                      "cornerRadius": 20,
+                      "padding": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pSx1b",
+                          "name": "optALabelText",
+                          "fill": "#FFFFFF",
+                          "content": "A",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "0i4Lr",
+                      "name": "optAText",
+                      "fill": "#6b21a8",
+                      "content": "개념(Concept)의 집합을 표현하며, 인스턴스들을 포함합니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ABCMB",
+                  "name": "Option B",
+                  "width": "fill_container",
+                  "fill": "#FAFAFA",
+                  "cornerRadius": 8,
+                  "gap": 12,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "1BgKG",
+                      "name": "optBLabel",
+                      "width": 28,
+                      "height": 28,
+                      "fill": "#E5E7EB",
+                      "cornerRadius": 20,
+                      "padding": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "W0Gsp",
+                          "name": "optBLabelText",
+                          "fill": "#64748B",
+                          "content": "B",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "uMUha",
+                      "name": "optBText",
+                      "fill": "#475569",
+                      "content": "두 개체 간의 관계만을 표현합니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wQjHD",
+                  "name": "Option C",
+                  "width": "fill_container",
+                  "fill": "#FAFAFA",
+                  "cornerRadius": 8,
+                  "gap": 12,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kr3Ed",
+                      "name": "optCLabel",
+                      "width": 28,
+                      "height": 28,
+                      "fill": "#E5E7EB",
+                      "cornerRadius": 20,
+                      "padding": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XAS4u",
+                          "name": "optCLabelText",
+                          "fill": "#64748B",
+                          "content": "C",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "fZzw0",
+                      "name": "optCText",
+                      "fill": "#475569",
+                      "content": "데이터베이스의 테이블과 동일한 역할을 합니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "aTdN8",
+                  "name": "Option D - Wrong",
+                  "width": "fill_container",
+                  "fill": "#FFF5F5",
+                  "cornerRadius": 8,
+                  "gap": 12,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DGf8f",
+                      "name": "optDLabel",
+                      "width": 28,
+                      "height": 28,
+                      "fill": "#EF4444",
+                      "cornerRadius": 20,
+                      "padding": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "vPy4R",
+                          "name": "optDLabelText",
+                          "fill": "#FFFFFF",
+                          "content": "D",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "pdQx1",
+                      "name": "optDText",
+                      "fill": "#b91c1c",
+                      "content": "하나의 인스턴스만 가질 수 있습니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "12Sv7",
+              "name": "Quiz Footer",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "6tBnM",
+                  "name": "quizResultBadge",
+                  "fill": "#F0FDF4",
+                  "cornerRadius": 8,
+                  "gap": 6,
+                  "padding": 10,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gTKXj",
+                      "name": "quizResultIcon",
+                      "fill": "#16a34a",
+                      "content": "✓",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "5OzXV",
+                      "name": "quizResultText",
+                      "fill": "#16a34a",
+                      "content": "정답입니다! A가 올바른 답입니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "s1lqi",
+                  "name": "quizFooterSpace",
+                  "width": "fill_container",
+                  "height": 20
+                },
+                {
+                  "type": "frame",
+                  "id": "CaNod",
+                  "name": "quizNextBtn",
+                  "fill": "#9b59b6",
+                  "cornerRadius": 8,
+                  "gap": 6,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VJXhv",
+                      "name": "quizNextText",
+                      "fill": "#FFFFFF",
+                      "content": "다음 문제 →",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "2vKrD",
+              "name": "quizConfirmBtn",
+              "width": "fill_container",
+              "fill": "#9b59b6",
+              "cornerRadius": 8,
+              "gap": 6,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "SxjaI",
+                  "name": "quizConfirmText",
+                  "fill": "#FFFFFF",
+                  "content": "정답 확인",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

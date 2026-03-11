@@ -7,69 +7,80 @@ interface MermaidDiagramProps {
   caption?: string
 }
 
-let idCounter = 0
-let mermaidInitialized = false
+// 동시 렌더링 방지를 위한 직렬화 큐
+let renderQueue = Promise.resolve()
+let renderCounter = 0
 
 export function MermaidDiagram({ chart, caption }: MermaidDiagramProps) {
   const [svg, setSvg] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const idRef = useRef<string>(`mermaid-diagram-${++idCounter}`)
+  // useRef로 cancelled 상태 관리 - 큐 콜백에서도 최신값 참조 가능
+  const cancelledRef = useRef(false)
 
   useEffect(() => {
-    let cancelled = false
+    cancelledRef.current = false
+    setIsLoading(true)
+    setError(null)
 
-    async function renderDiagram() {
+    // 모든 렌더링을 순차적으로 처리하여 동시 실행 방지
+    renderQueue = renderQueue.then(async () => {
+      if (cancelledRef.current) return
+
+      // 매 렌더마다 고유 ID 생성 (컴포넌트 재마운트/차트 변경 시에도 충돌 없음)
+      const id = `mermaid-${++renderCounter}-${Date.now()}`
+
       try {
-        setIsLoading(true)
-        setError(null)
-
         const mermaid = (await import('mermaid')).default
 
-        if (!mermaidInitialized) {
-          const isDark = document.documentElement.classList.contains('dark')
-          mermaid.initialize({
-            startOnLoad: false,
-            theme: isDark ? 'dark' : 'default',
-            securityLevel: 'loose',
-          })
-          mermaidInitialized = true
-        }
+        if (cancelledRef.current) return
 
-        // Clean up any existing element with this ID before rendering
-        const existing = document.getElementById(idRef.current)
-        if (existing) existing.remove()
+        const isDark = document.documentElement.classList.contains('dark')
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
+        })
 
-        // Validate syntax before rendering
+        if (cancelledRef.current) return
+
         await mermaid.parse(chart)
 
-        const { svg: renderedSvg } = await mermaid.render(idRef.current, chart)
-        if (!cancelled) {
+        if (cancelledRef.current) return
+
+        const { svg: renderedSvg } = await mermaid.render(id, chart)
+
+        if (!cancelledRef.current) {
           setSvg(renderedSvg)
           setIsLoading(false)
         }
       } catch (err) {
-        if (!cancelled) {
+        if (!cancelledRef.current) {
           setError(err instanceof Error ? err.message : '다이어그램 렌더링 오류')
           setIsLoading(false)
         }
       } finally {
-        // Clean up any error SVGs Mermaid may have injected into the body
-        if (typeof document !== 'undefined') {
-          const errorElements = document.querySelectorAll(`#d${idRef.current}, [id^="d${idRef.current}"]`)
-          errorElements.forEach(el => el.remove())
-          // Also clean up orphaned mermaid error containers
+        // Mermaid가 body에 생성한 임시 요소 정리
+        try {
+          const el = document.getElementById(id)
+          if (el) el.remove()
+          const wrapper = document.getElementById(`d${id}`)
+          if (wrapper) wrapper.remove()
+          // 오류 SVG 잔재 정리
           document.querySelectorAll('svg[aria-roledescription="error"]').forEach(el => {
             const next = el.nextElementSibling
             el.remove()
             if (next && next.tagName === 'STYLE') next.remove()
           })
+        } catch (_) {
+          // DOM 정리 실패는 무시
         }
       }
-    }
+    })
 
-    renderDiagram()
-    return () => { cancelled = true }
+    return () => {
+      cancelledRef.current = true
+    }
   }, [chart])
 
   if (isLoading) {
