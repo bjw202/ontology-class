@@ -27,7 +27,8 @@ level2_tokens: 3000
 
 # MoAI Extension: Triggers
 
-## triggers:\
+## triggers:\\
+
 keywords: \["nextra", "education", "curriculum", "학습", "교육", "mdx", "session", "세션", "강의", "bootcamp"\]\
 agents: \["manager-spec", "manager-ddd", "expert-frontend"\]\
 phases: \["plan", "run"\]
@@ -108,7 +109,7 @@ graph TD
 ## 흔한 오해
 
 > **흔한 오해**: "\[Common misconception\]"\
-****실제로는**: \[Correct explanation\]
+> \*\***실제로는**: \[Correct explanation\]
 
 ---
 

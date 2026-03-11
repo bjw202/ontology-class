@@ -3,34 +3,35 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg?style=flat&logo=react&logoColor=white)](https://reactjs.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000.svg?style=flat&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Nextra](https://img.shields.io/badge/Nextra-4.x-00D084.svg?style=flat&logo=nextra&logoColor=white)](https://nextra.site/)
+[![Nextra](https://img.shields.io/badge/Nextra-4.x-00D084.svg?style=flat)](https://nextra.site/)
+[![Mermaid](https://img.shields.io/badge/Mermaid-11.12-FF3670.svg?style=flat)](https://mermaid.js.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat)](LICENSE)
 
 ## 📋 프로젝트 개요
 
-**한국어**: 온톨로지 기초 학습 플랫폼은 온톨로지의 기초부터 고급 개념까지 단계별로 학습할 수 있는 교육 웹사이트입니다. 8단계 커리큘럼을 통해 온톨로지의 동기 부여, 기본 구성 요소, 논리적 기초, 표준, 설계 방법론, 주요 온톨로지, 실제 응용 프로그램, 한계/대안까지 체계적으로 배울 수 있습니다.
+온톨로지 기초부터 엔터프라이즈 수준의 활용 사례까지 단계별로 학습할 수 있는 한국어 교육 웹사이트입니다. 9단계 커리큘럼을 통해 온톨로지의 이론적 기초, 표준 언어 생태계, 설계 방법론, 그리고 Palantir의 엔터프라이즈 온톨로지 적용 사례까지 체계적으로 학습할 수 있습니다.
 
-**English**: The Ontology Fundamentals Learning Platform is an educational website for learning ontology fundamentals to advanced concepts through a step-by-step curriculum. It offers an 8-phase course covering motivation, building blocks, logical foundations, standards, design methodology, major ontologies, real-world applications, and limits/alternatives.
+**English**: An educational web platform for learning ontology fundamentals through a 9-phase Korean curriculum — from motivation and logical foundations to enterprise applications with Palantir's ontology stack.
 
 ### 🎯 주요 기능
 
-- **8단계 체계적 커리큘럼**: 기초부터 고급까지 단계별 학습 경로 제공
-- **한국어 주도**: 한국어로 작성된 교육 콘텐츠로 접근성 향상
-- **상호작용 다이어그램**: Mermaid 다이어그램을 통한 시각적 학습 지원
-- **반응형 디자인**: 모든 기기에서 최적의 사용자 경험 제공
-- **검색 기능**: 내장된 검색 시스템으로 원하는 콘텐츠 빠르게 찾기
-- **학습 경로 추적**: 각 단계별 학습 진도 확인 가능
+- **9단계 체계적 커리큘럼**: 기초 개념부터 엔터프라이즈 적용 사례까지
+- **한국어 콘텐츠**: 온톨로지 전 영역을 한국어로 학습
+- **Mermaid 다이어그램**: race condition 없는 안정적인 다이어그램 렌더링
+- **단일 HTML 내보내기**: 서버 없이 배포 가능한 단일 HTML 파일 생성
+- **반응형 디자인**: 모든 기기에서 최적 경험 제공
+- **Nextra 검색**: 내장 전문 검색 기능
 
 ### 💻 기술 스택
 
-| 기술 | 버전 | 설명 |
+| 기술 | 버전 | 역할 |
 |------|------|------|
-| **Next.js** | 15.x | React 기반 프레임워크 |
+| **Next.js** | 15.x | React 기반 풀스택 프레임워크 |
 | **React** | 19.x | UI 라이브러리 |
-| **TypeScript** | 5.x | 정적 타입 지원 |
-| **Nextra** | 4.x | 정적 사이트 생성기 |
-| **Mermaid** | 11.12.2 | 다이어그램 생성 라이브러리 |
-| **Tailwind CSS** | 3.x | CSS 프레임워크 |
+| **TypeScript** | 5.x | 정적 타입 |
+| **Nextra** | 4.x | MDX 기반 문서 프레임워크 |
+| **Mermaid** | 11.12.2 | 다이어그램 생성 (직렬화 큐 적용) |
+| **Tailwind CSS** | 3.x | 유틸리티 CSS |
 
 ---
 
@@ -40,39 +41,33 @@
 
 - Node.js 18.0 이상
 - npm 9.0 이상
-- Git
 
 ### 설치 및 실행
 
-1. **저장소 복제**
-   ```bash
-   git clone https://github.com/your-username/ontology-learning-platform.git
-   cd ontology-learning-platform
-   ```
+```bash
+# 저장소 복제
+git clone https://github.com/bjw202/ontology-class.git
+cd ontology-class
 
-2. **의존성 설치**
-   ```bash
-   npm install
-   ```
+# 의존성 설치
+npm install
 
-3. **개발 서버 실행**
-   ```bash
-   npm run dev
-   ```
+# 개발 서버 실행
+npm run dev
+```
 
-4. **브라우저에서 확인**
-   ```
-   http://localhost:3000
-   ```
+브라우저에서 `http://localhost:3000` 접속
 
-### 빌드 및 배포
+### 빌드
 
 ```bash
-# 프로덕션 빌드
+# 프로덕션 빌드 (Vercel / 서버 배포)
 npm run build
-
-# 로컬에서 배포 결과 확인
 npm run start
+
+# 단일 HTML 파일로 내보내기 (오프라인 배포)
+npm run build:single-full
+# → out/ontology-single.html 생성
 ```
 
 ---
@@ -81,105 +76,123 @@ npm run start
 
 ```
 ontology-class/
-├── .moai/                 # MoAI 프로젝트 설정
-│   ├── config/           # 설정 파일
-│   ├── project/          # 프로젝트 문서
-│   └── specs/            # 사양 문서
-├── src/                  # 소스 코드
-│   ├── app/             # Next.js 15 App Router
-│   ├── components/      # 공통 컴포넌트
-│   ├── lib/             # 유틸리티 함수
-│   └── styles/          # 전역 스타일
-├── .nextra/             # Nextra 설정
-├── public/              # 정적 자산
-├── pages/               # Nextra 페이지 디렉토리
-│   ├── index.mdx        # 메인 페이지
-│   ├── about.mdx        # 프로젝트 소개
-│   ├── phase-1/         # 1단계: 온톨로지 동기 부여
-│   ├── phase-2/         # 2단계: 기본 구성 요소
-│   ├── phase-3/         # 3단계: 논리적 기초
-│   ├── phase-4/         # 4단계: 표준
-│   ├── phase-5/         # 5단계: 설계 방법론
-│   ├── phase-6/         # 6단계: 주요 온톨로지
-│   ├── phase-7/         # 7단계: 실제 응용 프로그램
-│   ├── phase-8/         # 8단계: 한계/대안
-│   └── reference/       # 참고 자료
-├── theme.config.tsx     # Nextra 테마 설정
-├── next.config.js       # Next.js 설정
-└── package.json         # 프로젝트 메타데이터
+├── content/                  # MDX 콘텐츠 (Nextra 자동 라우팅)
+│   ├── _meta.js              # 사이드바 순서·제목 설정
+│   ├── index.mdx             # 홈 페이지
+│   ├── phase-1/              # 1단계: 왜 온톨로지가 필요한가?
+│   ├── phase-2/              # 2단계: 구성 요소
+│   ├── phase-3/              # 3단계: 논리적 기초
+│   ├── phase-4/              # 4단계: 표준과 언어 생태계
+│   ├── phase-5/              # 5단계: 설계 방법론
+│   ├── phase-6/              # 6단계: 주요 표준 온톨로지
+│   ├── phase-7/              # 7단계: 실전 적용
+│   ├── phase-8/              # 8단계: 한계와 대안
+│   ├── phase-9/              # 9단계: 엔터프라이즈 온톨로지 (Palantir)
+│   ├── reference/            # 참고자료
+│   └── about/                # 소개
+├── components/               # 커스텀 React 컴포넌트
+│   ├── MermaidDiagram.tsx    # Mermaid 다이어그램 (직렬화 큐 적용)
+│   ├── mermaid-remark.tsx    # remark-mermaid 커스텀 렌더러
+│   ├── Exercise.tsx          # 실습 컴포넌트
+│   ├── ConceptCard.tsx       # 개념 카드 컴포넌트
+│   └── CompetencyQuestion.tsx # 역량 문제 컴포넌트
+├── scripts/
+│   ├── static-export-bundle.js  # 단일 HTML 번들러
+│   └── build-single-html.js     # 기존 단순 빌더 (레거시)
+├── my-docs/                  # 개발 참고 문서
+│   └── single-html-export.md # 단일 HTML 내보내기 원리 설명
+├── next.config.mjs           # Next.js 설정 (정적 export 조건부 지원)
+├── mdx-components.tsx        # MDX 전역 컴포넌트 등록
+└── package.json              # 스크립트 및 의존성
 ```
 
 ---
 
-## 📚 컨텐츠 개요
+## 📚 커리큘럼
 
-### 8단계 학습 커리큘럼
+### 9단계 학습 과정
 
-| 단계 | 제목 | 설명 |
-|-----|------|------|
-| **1단계** | 온톨로지 동기 부여 | 온톨로지의 필요성과 기본 개념 소개 |
-| **2단계** | 기본 구성 요소 | 클래스, 속성, 관계 등 기본 요소 설명 |
-| **3단계** | 논리적 기초 | 1차 논리, 설계 원칙, 형식화 방법 |
-| **4단계** | 표준 | OWL, RDF, RDFS 등 표준 명세 |
-| **5단계** | 설계 방법론 | 온톨로지 설계 원칙과 최적화 방법 |
-| **6단계** | 주요 온톨로지 | WordNet, SUMO 등 주요 온톨로지 분석 |
-| **7단계** | 실제 응용 프로그램 | 의료, 교육, 기업 등 실제 적용 사례 |
-| **8단계** | 한계와 대안 | 현재 한계와 미래 발전 방향 |
+| 단계 | 제목 | 핵심 내용 |
+|-----|------|----------|
+| **1단계** | 왜 온톨로지가 필요한가? | 동기 부여, 상호운용성 문제, Gruber의 정의 |
+| **2단계** | 구성 요소 | 클래스, 인스턴스, 속성, 공리, 계층 구조 |
+| **3단계** | 논리적 기초 | 기술 논리(DL), OWA vs CWA, 추론 유형, OWL 2 |
+| **4단계** | 표준과 언어 생태계 | RDF, RDFS, OWL, SPARQL, 직렬화 형식, 도구 |
+| **5단계** | 설계 방법론 | METHONTOLOGY, CQ 기반 설계, 재사용, 안티패턴 |
+| **6단계** | 주요 표준 온톨로지 | FOAF, Dublin Core, Schema.org, GO, SNOMED, FHIR |
+| **7단계** | 실전 적용 | 시맨틱 웹, 지식 그래프, NLP, LLM+GraphRAG |
+| **8단계** | 한계와 대안 | 현실적 비용, 벡터 임베딩과의 비교, 기술 선택 트리 |
+| **9단계** | 엔터프라이즈 온톨로지 | Palantir Foundry 사례, Digital Twin, AIP+LLM 통합 |
 
-### 페이지 구조
+---
 
-- **`/`** - 메인 랜딩 페이지
-- **`/about`** - 프로젝트 정보 및 목적
-- **`/phase-1`** ~ **`/phase-8`** - 각 단계별 학습 콘텐츠
-- **`/reference`** - 참고 자료 및 추가 자원
+## ⚙️ 스크립트 참고
+
+```bash
+npm run dev              # 개발 서버 (localhost:3000)
+npm run build            # 프로덕션 빌드 (서버 배포용)
+npm run build:export     # Next.js 정적 export (→ /out 폴더)
+npm run bundle:single    # /out 폴더를 단일 HTML로 번들링
+npm run build:single-full  # build:export + bundle:single 한 번에
+```
+
+### 단일 HTML 내보내기 상세
+
+서버 없이 오프라인으로 배포하거나 단일 파일로 공유할 때 사용합니다.
+
+```bash
+npm run build:single-full
+# 출력: out/ontology-single.html
+```
+
+**작동 원리:**
+1. `NEXT_STATIC_EXPORT=1 next build` → Nextra CSS + 완성된 HTML 페이지들 생성
+2. 번들러 스크립트가 각 페이지 `<article>` 추출
+3. MDX 원본에서 Mermaid 다이어그램 소스 파싱 → `<pre class="mermaid">` 블록으로 주입
+4. Mermaid CDN + 해시 기반 네비게이션 스크립트 추가
+5. 단일 `.html` 파일로 조립
+
+> 자세한 원리는 [`my-docs/single-html-export.md`](my-docs/single-html-export.md) 참고
 
 ---
 
 ## 🤝 기여 가이드라인
 
-### 개발 환경 설정
-
-1. 저장소 포크 및 로컀 클론
-2. 새 기능 브랜치 생성 (`git checkout -b feature/amazing-feature`)
-3. 변경 사항 커밋 (`git commit -m 'feat: Add amazing feature'`)
-4. 푸시 및 풀 리퀘스트 생성
+1. 저장소 포크 및 로컬 클론
+2. 기능 브랜치 생성: `git checkout -b feat/새기능`
+3. MDX 파일 수정 또는 컴포넌트 추가
+4. 커밋: `git commit -m 'feat: 새 기능 설명'`
+5. 푸시 및 Pull Request 생성
 
 ### 커밋 메시지 규칙
 
-- **feat**: 새 기능 추가
-- **fix**: 버그 수정
-- **docs**: 문서 변경
-- **style**: 코드 서식 변경
-- **refactor**: 리팩토링
-- **test**: 테스트 관련
-- **chore**: 빌드 또는 도구 변경
+| 타입 | 용도 |
+|------|------|
+| `feat` | 새 기능 |
+| `fix` | 버그 수정 |
+| `docs` | 문서 변경 |
+| `refactor` | 리팩토링 |
+| `chore` | 빌드·도구 변경 |
 
 ### 코드 컨벤션
 
-- TypeScript 엄격 모드 사용
-- ESLint 및 Prettier 설정 따르기
-- 컴포넌트는 PascalCase 사용
-- 파일명은 kebab-case 사용
+- TypeScript strict mode 사용
+- 컴포넌트: PascalCase / 파일명: kebab-case
+- 코드 주석: 한국어
 
 ---
 
 ## 📄 라이선스
 
-MIT 라이선스 - 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
-
-## 📞 연락처
-
-- 프로젝트 관리자: jw
-- 이메일: [jw@example.com](mailto:jw@example.com)
-- GitHub: [your-username](https://github.com/your-username)
-
-## 🙏 인정
-
-이 프로젝트는 온톨로지 학습을 위한 한국어 교육 콘텐츠 부족 문제를 해결하기 위해 개발되었습니다. 관련 자료와 참고문헌은 프로젝트 문서 내에서 자세히 확인할 수 있습니다.
+MIT License — 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 
 ---
 
 ### 📈 프로젝트 상태
 
-개발 진행도: `🟢 활발 개발 중`
-다음 릴리스: `v1.0.0` (2024년 4월)
+| 항목 | 상태 |
+|------|------|
+| 개발 | 🟢 활발 진행 중 |
+| 커리큘럼 | 9단계 완성 |
+| 단일 HTML 내보내기 | ✅ 지원 |
+| 다국어 지원 | 한국어 (주), English (설명) |

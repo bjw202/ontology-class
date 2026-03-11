@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:export": "NEXT_STATIC_EXPORT=1 next build",
+    "bundle:single": "node scripts/static-export-bundle.js",
+    "build:single-full": "npm run build:export && npm run bundle:single",
     "build:single": "node scripts/build-single-html.js",
     "start": "next start",
     "lint": "next lint"
